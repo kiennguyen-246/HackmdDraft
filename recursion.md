@@ -450,4 +450,4 @@ Ngoài ra, trong một số bài toán yêu cầu tính toán ta cũng có thể
 - Giải Sudoku: Hãy thử viết một chương trình sử dụng đệ quy quay lui để giải một bảng Sudoku cho trước [ở đây](https://sudoku.com)
 
 ## Tài liệu tham khảo
-- Lê Minh Hoàng (2003), *Giải thuật và lập trình*
+- Lê Minh Hoàng (2003), *Giải thuật và lập trình* 
