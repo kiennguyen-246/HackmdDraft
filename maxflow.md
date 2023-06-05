@@ -7,7 +7,7 @@ Luồng cực đại và Lát cắt hẹp nhất là những bài toán quan tr�
 
 Bài viết sẽ không nêu lại các khái niệm cơ bản về đồ thị.
 
-- **Ký hiệu $G(V, E)$**: Đồ thị tập các đỉnh là $V$ và tập các cạnh là $E$
+- **Ký hiệu đồ thị $G(V, E)$**: Đồ thị tập các đỉnh là $V$ và tập các cạnh là $E$
 - **Cung**: cạnh có hướng trên đồ thị.
 - **Cạnh/cung đi vào đỉnh $u$**: Các cạnh có dạng $(v, u)$, với $v$ là đỉnh bất kỳ của đồ thị.
 - **Cạnh/cung đi ra khỏi đỉnh $u$**: Các cạnh có dạng $(u, v)$, với $v$ là đỉnh bất kỳ của đồ thị.
@@ -49,3 +49,27 @@ Có rất nhiều hình ảnh thực tế để miêu tả một mạng và lu�
 - Mỗi ống có một giới hạn nhất định. Lượng nước chảy qua ống này không thể vượt quá giới hạn này.
 - Hiển nhiên, tại mỗi điểm nút (trừ điểm đầu và điểm cuối), có bao nhiêu nước đến thì sẽ có bấy nhiêu nước chảy đi. Nước không tự sinh ra và mất đi, chúng chỉ chảy từ điểm này sang điểm khác.
 - Và tất nhiên tổng lượng nước xuất hiện trong mạng sẽ là lượng nước ta cấp cho nguồn. Bể chứa cũng sẽ thu được từng đó nước.
+
+### Bài toán
+Cho mạng $G(V, E)$ với $m$ đỉnh và $n$ cạnh có đỉnh phát là $S$, đỉnh thu là $T$ ($n \le 1000, 1 \le S, T \le n$). Hãy tìm một luồng trong mạng sao cho giá trị của nó là lớn nhất. 
+Luồng này gọi là **luồng cực đại** trên mạng $G$.
+*Đề bài VNOI*: [NKFLOW](https://oj.vnoi.info/problem/nkflow)
+
+## Phương pháp Ford-Fulkerson. Thuật toán Edmonds-Karp.
+**Đôi lời về lịch sử thuật toán:**
+
+Năm 1956, L. R. Ford Jr. và D. R. Fulkerson đề xuất một phương pháp để tìm ra luồng cực đại trên mạng. Tuy nhiên, phương pháp này không chỉ rõ việc tìm *đường tăng luồng* như thế nào. Đến năm 1972, Jack Edmonds and Richard Karp đã hoàn thiện phương pháp trên bằng cách sử dụng thuật BFS để tìm *đường tăng luồng*. 
+
+Nhiều tài liệu mà chúng ta đang dùng có sử dụng cụm từ "thuật toán Ford-Fulkerson" để gọi thuật tìm luồng cực đại hoàn chỉnh, và biến "thuật toán Edmonds-Karp" thành một thuật xa lạ kì quặc nào đó. Điều này có lẽ cũng ... không hẳn là sai. Còn bài viết này sẽ sử dụng tên Edmonds-Karp cho thuật toán, và chỉ gọi là "phương pháp Ford-Fulkerson" thôi. Bạn đọc muốn hiểu theo tên nào cũng được.
+
+### Đường tăng luồng
+Với mọi cung $(u, v)$, ta định nghĩa thêm giá trị $f(v, u) = -f(u, v)$. Về mặt ý nghĩa, việc định nghĩa này cho ta biết luồng hiện tại trên cung này có thể giảm đi một lượng đúng bằng như vậy. Còn vì sao lại là $f(v, u)$ chứ không phải cái gì khác, chúng ta sẽ biết ở phần sau.
+Lưu ý rằng ta **không** định nghĩa $c(v, u) = c(u, v)$, giá trị này vẫn được mặc định bằng $0$.
+
+Định nghĩa **luồng thặng dư** (residual flow) trên một cung tại một thời điểm là hiệu của thông lượng và giá trị luồng hiện tại trên cung đó:
+$r(u, v) = c(u, v) - f(u, v)$
+Giá trị này cũng áp dụng cho cả các cung đảo (cung có luồng âm), khi đó $r(v, u) = 0 - f(v, u) = f(u, v)$.
+
+Với các giá trị $r(u, v)$ này, ta có thể xây dựng một **đồ thị tăng luồng/đồ thị thặng dư** (residual network), gồm các cung $(u, v)$, mỗi cung có trọng số là $r(u, v)$. Mỗi cạnh cho ta biết có thể tăng/giảm luồng trên đồ thị gốc bao nhiêu.
+
+Một **đường tăng luồng** (augmenting path) là một đường đi đơn trên đồ thị tăng luồng. Đối chiếu lại với đồ thị gốc, đó sẽ là một đường đi đơn (có thể đi ngược chiều) qua những cung có $r(u, v) > 0$. Trên đường này, chúng ta có thể thực hiện tăng giá trị của luồng trên mỗi cung.
