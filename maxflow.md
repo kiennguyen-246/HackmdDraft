@@ -13,12 +13,16 @@ Bài viết sẽ không nêu lại các khái niệm cơ bản về đồ thị.
 - **Cạnh/cung đi ra khỏi đỉnh $u$**: Các cạnh có dạng $(u, v)$, với $v$ là đỉnh bất kỳ của đồ thị.
 - **Đường đi đơn từ $S$ tới $T$**: Dãy các đỉnh $S, u_1, u_2, ..., u_k, T$ sao cho giữa hai đỉnh liên tiếp trong dãy tồn tại một cạnh nối chúng theo đúng chiều như trên.
 
-## Bài toán
+## Bài toán Luồng cực đại
 ### Các định nghĩa
 Một đồ thị $G(V, E)$ được gọi là **mạng** (network) nếu nó là đồ thị **có hướng**, trong đó:
 - Tồn tại một đỉnh $S$ không có cung đi vào, gọi là **đỉnh phát/nguồn** (source)
 - Tồn tại một đỉnh $T$ không có cung đi ra, gọi là **đỉnh thu/đích** (sink)
 - Mỗi cung $(u, v)$ được gán một trọng số $c(u, v)$, gọi là **thông lượng** (capacity) của cung.
+
+![](https://hackmd.io/_uploads/rkBl97iL3.png)
+
+*Một mạng hợp lệ. Đỉnh phát và đỉnh thu được đánh dấu bằng hai màu khác.*
 
 Một **luồng** (flow) trên mạng $G(V, E)$ là một phép gán cho mỗi cung $(u, v)$ một số thực $f(u, v)$ thoả mãn:
 - Luồng trên mỗi cung có giá trị không vượt quá thông lượng của cung đó:
@@ -35,6 +39,10 @@ $\sum_{
 Tính chất này tương đối giống với định luật I Kirchoff của dòng điện.
 - Giá trị $f(u, v)$ được gọi là **luồng trên cung $(u, v)$**
 - **Giá trị của luồng** là tổng luồng trên các cung đi ra khỏi đỉnh phát, cũng chính là tổng luồng trên các cung đi ra khỏi đỉnh thu.
+
+![](https://hackmd.io/_uploads/Syb-57oL2.png)
+
+*Một luồng hợp lệ. Giá trị `a/b` trên cạnh được hiểu là `f/c`, với `f` là luồng còn `c` là thông lượng.*
 
 Có rất nhiều hình ảnh thực tế để miêu tả một mạng và luồng như trên, như một mạng điện, một mạng kết nối dữ liệu giữa các máy, ... Nếu ta hiểu mạng như một hệ thống ống nước, nó sẽ như sau:
 - Nước chảy qua một hệ thống các ống, từ nguồn nước (đỉnh phát) đến bồn chứa (đỉnh thu).
