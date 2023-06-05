@@ -73,3 +73,13 @@ Giá trị này cũng áp dụng cho cả các cung đảo (cung có luồng âm
 Với các giá trị $r(u, v)$ này, ta có thể xây dựng một **đồ thị tăng luồng/đồ thị thặng dư** (residual network), gồm các cung $(u, v)$, mỗi cung có trọng số là $r(u, v)$. Mỗi cạnh cho ta biết có thể tăng/giảm luồng trên đồ thị gốc bao nhiêu.
 
 Một **đường tăng luồng** (augmenting path) là một đường đi đơn trên đồ thị tăng luồng. Đối chiếu lại với đồ thị gốc, đó sẽ là một đường đi đơn (có thể đi ngược chiều) qua những cung có $r(u, v) > 0$. Trên đường này, chúng ta có thể thực hiện tăng giá trị của luồng trên mỗi cung.
+
+![](https://hackmd.io/_uploads/H1DsnroU2.png)
+
+Đường màu xanh-đỏ là một đường tăng luồng trên đồ thị tăng luồng trên. Các cạnh đứt chính là các cạnh "ngược" so với mạng ban đầu; chúng có giá trị $f$ âm.
+
+![](https://hackmd.io/_uploads/r1OzTrj83.png)
+
+Đem đối chiếu đồ thị tăng luồng trên về đồ thị gốc, ta được đường tăng luồng như thế này. Trong hình dưới, luồng ($f$) trên các cạnh thuộc đường tăng luồng đã được tăng $1$ đơn vị.
+
+Còn nếu bạn muốn hiểu theo kiểu "ống nước" thì đường tăng luồng có thể coi như một đường nước chảy từ nguồn đến bể chứa. Đối với các "ống đi ngược" như "ống" $(5, 2)$ trên hình, ta hiểu đây là một cách phân phối lại nước: thêm $1$ đơn vị nước vào nút $5$ sẽ dẫn đến việc phải bớt $1$ đơn vị từ ống $(2, 5)$ để đảm bảo đoạn sau vẫn đủ nước; ở đầu $2$ phần nước thay vì chảy vào ống này đi ra đầu $5$ thì nó sẽ đưa phần nước này sang ống $(2, 4)$.
