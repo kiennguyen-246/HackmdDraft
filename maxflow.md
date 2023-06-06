@@ -93,8 +93,11 @@ Ta đi tìm một đường tăng luồng có thể có trên đồ thị. Nhắ
 
 Trên đường này, với mỗi cung $(u, v)$, ta tăng giá trị của luồng trên cung này ($f(u, v)$) lên $\Delta$ đơn vị, với $\Delta$ là giá trị $r(u, v)$ nhỏ nhất trên đường tăng luồng vừa tìm được. Đồng thời, ta cũng phải giảm $f(v, u)$ đi $\Delta$ để luôn có $f(u, v) = -f(v, u)$.
 
-Một cách dễ hiểu hơn thì tại bước này, ta tăng luồng trên đường vừa tìm được đến mức tối đa.
+Một cách dễ hiểu hơn thì tại bước này, ta tăng luồng trên đường vừa tìm được đến mức tối đa có thể.
 
 Ta lặp đi lặp lại việc tăng luồng cho đến khi nào không thể tìm được đường tăng luồng nữa thì thôi. Khi đó, giá trị của luồng trong cả mạng chính là luồng cực đại mà ta cần tìm.
+
+![](https://hackmd.io/_uploads/rykkYIhLh.gif)
+
 
 Hình GIF trên mô tả thuật toán trên mạng ta vừa lấy ví dụ trong bài viết này. Chú ý rằng có một bước, chúng ta đã phải sử dụng cung ngược.
