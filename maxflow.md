@@ -82,4 +82,19 @@ Một **đường tăng luồng** (augmenting path) là một đường đi đơ
 
 Đem đối chiếu đồ thị tăng luồng trên về đồ thị gốc, ta được đường tăng luồng như thế này. Trong hình dưới, luồng ($f$) trên các cạnh thuộc đường tăng luồng đã được tăng $1$ đơn vị.
 
+Việc xây dựng cả một đồ thị tăng luồng sau từng bước rất tốn thời gian và bộ nhớ. Vì vậy, chúng ta sẽ chỉ sử dụng đồ thị gốc, và thực hiện tìm đường tăng luồng trực tiếp trên đồ thị này.
+
 Còn nếu bạn muốn hiểu theo kiểu "ống nước" thì đường tăng luồng có thể coi như một đường nước chảy từ nguồn đến bể chứa. Đối với các "ống đi ngược" như "ống" $(5, 2)$ trên hình, ta hiểu đây là một cách phân phối lại nước: thêm $1$ đơn vị nước vào nút $5$ sẽ dẫn đến việc phải bớt $1$ đơn vị từ ống $(2, 5)$ để đảm bảo đoạn sau vẫn đủ nước; ở đầu $2$ phần nước thay vì chảy vào ống này đi ra đầu $5$ thì nó sẽ đưa phần nước này sang ống $(2, 4)$.
+
+### Thuật toán
+Đầu tiên ta gán giá trị mọi luồng trên tất cả mọi cung thành $0$.
+
+Ta đi tìm một đường tăng luồng có thể có trên đồ thị. Nhắc lại rằng, đường tăng luồng chỉ chứa các cung (kể cả cung ngược) có $r > 0$, hay $c - f > 0$.
+
+Trên đường này, với mỗi cung $(u, v)$, ta tăng giá trị của luồng trên cung này ($f(u, v)$) lên $\Delta$ đơn vị, với $\Delta$ là giá trị $r(u, v)$ nhỏ nhất trên đường tăng luồng vừa tìm được. Đồng thời, ta cũng phải giảm $f(v, u)$ đi $\Delta$ để luôn có $f(u, v) = -f(v, u)$.
+
+Một cách dễ hiểu hơn thì tại bước này, ta tăng luồng trên đường vừa tìm được đến mức tối đa.
+
+Ta lặp đi lặp lại việc tăng luồng cho đến khi nào không thể tìm được đường tăng luồng nữa thì thôi. Khi đó, giá trị của luồng trong cả mạng chính là luồng cực đại mà ta cần tìm.
+
+Hình GIF trên mô tả thuật toán trên mạng ta vừa lấy ví dụ trong bài viết này. Chú ý rằng có một bước, chúng ta đã phải sử dụng cung ngược.
