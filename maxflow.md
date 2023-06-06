@@ -11,23 +11,24 @@ Bài viết sẽ không nêu lại các khái niệm cơ bản về đồ thị.
 - **Cung**: cạnh có hướng trên đồ thị.
 - **Cạnh/cung đi vào đỉnh $u$**: Các cạnh có dạng $(v, u)$, với $v$ là đỉnh bất kỳ của đồ thị.
 - **Cạnh/cung đi ra khỏi đỉnh $u$**: Các cạnh có dạng $(u, v)$, với $v$ là đỉnh bất kỳ của đồ thị.
-- **Đường đi đơn từ $S$ tới $T$**: Dãy các đỉnh $S, u_1, u_2, ..., u_k, T$ sao cho giữa hai đỉnh liên tiếp trong dãy tồn tại một cạnh nối chúng theo đúng chiều như trên.
+- **Đường đi đơn từ $s$ tới $t$**: Dãy các đỉnh $s, u_1, u_2, ..., u_k, t$ sao cho giữa hai đỉnh liên tiếp trong dãy tồn tại một cạnh nối chúng theo đúng chiều như trên.
 
 ## Bài toán Luồng cực đại
+
 ### Các định nghĩa
 Một đồ thị $G(V, E)$ được gọi là **mạng** (network) nếu nó là đồ thị **có hướng**, trong đó:
-- Tồn tại một đỉnh $S$ không có cung đi vào, gọi là **đỉnh phát/nguồn** (source)
-- Tồn tại một đỉnh $T$ không có cung đi ra, gọi là **đỉnh thu/đích** (sink)
-- Mỗi cung $(u, v)$ được gán một trọng số $c(u, v)$, gọi là **thông lượng** (capacity) của cung.
+- Tồn tại một đỉnh $s$ không có cung đi vào, gọi là **đỉnh phát/nguồn** (source)
+- Tồn tại một đỉnh $t$ không có cung đi ra, gọi là **đỉnh thu/đích** (sink)
+- Mỗi cung $(u, v)$ được gán một trọng số $c(u, v)$, gọi là **khả năng thông qua** (capacity) của cung.
 
 ![](https://hackmd.io/_uploads/rkBl97iL3.png)
 
 *Một mạng hợp lệ. Đỉnh phát và đỉnh thu được đánh dấu bằng hai màu khác.*
 
 Một **luồng** (flow) trên mạng $G(V, E)$ là một phép gán cho mỗi cung $(u, v)$ một số thực $f(u, v)$ thoả mãn:
-- Luồng trên mỗi cung có giá trị không vượt quá thông lượng của cung đó:
+- Luồng trên mỗi cung có giá trị không vượt quá khả năng thông qua của cung đó:
 $0 <= $f(u, v) <= c(u, v) \forall u, v \in V$
-- Với mọi đỉnh $v$ không trùng với đỉnh phát $S$ và đỉnh thu $T$, tổng luồng trên các cung đi vào $v$ bằng tổng luồng trên các cung đi ra $v$.
+- Với mọi đỉnh $v$ không trùng với đỉnh phát $s$ và đỉnh thu $t$, tổng luồng trên các cung đi vào $v$ bằng tổng luồng trên các cung đi ra $v$.
 $\sum_{
 \begin{subarray}{l}
    v \in V, \exists (v, u) \in E
@@ -42,17 +43,55 @@ Tính chất này tương đối giống với định luật I Kirchoff của d
 
 ![](https://hackmd.io/_uploads/Syb-57oL2.png)
 
-*Một luồng hợp lệ. Giá trị `a/b` trên cạnh được hiểu là `f/c`, với `f` là luồng còn `c` là thông lượng.*
+*Một luồng hợp lệ. Giá trị `a/b` trên cạnh được hiểu là `f/c`, với `f` là luồng còn `c` là khả năng thông qua.*
+
+Một **lát cắt** (cut) $(A, B)$ trên mạng là một cách chia các đỉnh trên đồ thị mạng thành hai tập hợp sao cho $s \in A, t \in B$.
+Tổng các giá trị khả năng thông qua trên các cung nối giữa một đỉnh thuộc $A$ và một đỉnh thuộc $B$ được gọi là **khả năng thông qua** (cut value) của lát cắt $(A, B)$
+ $c(A, B) = 
+\sum_{
+\begin{subarray}{l}
+   u \in A, v \in B
+\end{subarray}} c(u, v)$
+![Lát cắt]()
+
+**Định lý**: Tất cả mọi luồng đều có giá trị không lớn hơn khả năng thông qua của một lát cắt bất kỳ.
+
+**Chứng minh**:
+
+Xét luồng có giá trị $f$ và lát cắt $(A, B)$ trên một mạng bất kỳ. Ta có: 
+ $f$
+$ = 
+\sum_{
+\begin{subarray}{l}
+   u \in A, v \in B
+\end{subarray}} f(u, v) - 
+\sum_{
+\begin{subarray}{l}
+   u \in B, v \in A
+\end{subarray}} f(u, v)$
+$\le
+\sum_{
+\begin{subarray}{l}
+   u \in A, v \in B
+\end{subarray}} f(u, v)$
+$\le
+\sum_{
+\begin{subarray}{l}
+   u \in A, v \in B
+\end{subarray}} c(u, v)$
+$= c(A, B)$ (đpcm)
 
 Có rất nhiều hình ảnh thực tế để miêu tả một mạng và luồng như trên, như một mạng điện, một mạng kết nối dữ liệu giữa các máy, ... Nếu ta hiểu mạng như một hệ thống ống nước, nó sẽ như sau:
 - Nước chảy qua một hệ thống các ống, từ nguồn nước (đỉnh phát) đến bồn chứa (đỉnh thu).
 - Mỗi ống có một giới hạn nhất định. Lượng nước chảy qua ống này không thể vượt quá giới hạn này.
 - Hiển nhiên, tại mỗi điểm nút (trừ điểm đầu và điểm cuối), có bao nhiêu nước đến thì sẽ có bấy nhiêu nước chảy đi. Nước không tự sinh ra và mất đi, chúng chỉ chảy từ điểm này sang điểm khác.
 - Và tất nhiên tổng lượng nước xuất hiện trong mạng sẽ là lượng nước ta cấp cho nguồn. Bể chứa cũng sẽ thu được từng đó nước.
+- Còn một lát cắt là một cách bỏ đi các ống sao cho nước không thể chảy từ nguồn đến bể nữa bằng bất kỳ cách nào.
 
 ### Bài toán
-Cho mạng $G(V, E)$ với $m$ đỉnh và $n$ cạnh có đỉnh phát là $S$, đỉnh thu là $T$ ($n \le 1000, 1 \le S, T \le n$). Hãy tìm một luồng trong mạng sao cho giá trị của nó là lớn nhất. 
+**Đề bài**: Cho mạng $G(V, E)$ với $m$ đỉnh và $n$ cạnh có đỉnh phát là $s$, đỉnh thu là $t$ ($n \le 1000, 1 \le s, t \le n$). Hãy tìm một luồng trong mạng sao cho giá trị của nó là lớn nhất. 
 Luồng này gọi là **luồng cực đại** trên mạng $G$.
+
 *Đề bài VNOI*: [NKFLOW](https://oj.vnoi.info/problem/nkflow)
 
 ## Phương pháp Ford-Fulkerson. Thuật toán Edmonds-Karp.
@@ -66,7 +105,7 @@ Nhiều tài liệu mà chúng ta đang dùng có sử dụng cụm từ "thuậ
 Với mọi cung $(u, v)$, ta định nghĩa thêm giá trị $f(v, u) = -f(u, v)$. Về mặt ý nghĩa, việc định nghĩa này cho ta biết luồng hiện tại trên cung này có thể giảm đi một lượng đúng bằng như vậy. Còn vì sao lại là $f(v, u)$ chứ không phải cái gì khác, chúng ta sẽ biết ở phần sau.
 Lưu ý rằng ta **không** định nghĩa $c(v, u) = c(u, v)$, giá trị này vẫn được mặc định bằng $0$.
 
-Định nghĩa **luồng thặng dư** (residual flow) trên một cung tại một thời điểm là hiệu của thông lượng và giá trị luồng hiện tại trên cung đó:
+Định nghĩa **luồng thặng dư** (residual flow) trên một cung tại một thời điểm là hiệu của khả năng thông qua và giá trị luồng hiện tại trên cung đó:
 $r(u, v) = c(u, v) - f(u, v)$
 Giá trị này cũng áp dụng cho cả các cung đảo (cung có luồng âm), khi đó $r(v, u) = 0 - f(v, u) = f(u, v)$.
 
@@ -80,7 +119,7 @@ Một **đường tăng luồng** (augmenting path) là một đường đi đơ
 
 ![](https://hackmd.io/_uploads/r1OzTrj83.png)
 
-Đem đối chiếu đồ thị tăng luồng trên về đồ thị gốc, ta được đường tăng luồng như thế này. Trong hình dưới, luồng ($f$) trên các cạnh thuộc đường tăng luồng đã được tăng $1$ đơn vị.
+Đem đối chiếu đồ thị tăng luồng trên về đồ thị gốc, ta được đường tăng luồng như thế này. Trong hình dưới, giá trị của luồng ($f$) trên các cạnh thuộc đường tăng luồng đã được tăng $1$ đơn vị.
 
 Việc xây dựng cả một đồ thị tăng luồng sau từng bước rất tốn thời gian và bộ nhớ. Vì vậy, chúng ta sẽ chỉ sử dụng đồ thị gốc, và thực hiện tìm đường tăng luồng trực tiếp trên đồ thị này.
 
@@ -93,11 +132,131 @@ Ta đi tìm một đường tăng luồng có thể có trên đồ thị. Nhắ
 
 Trên đường này, với mỗi cung $(u, v)$, ta tăng giá trị của luồng trên cung này ($f(u, v)$) lên $\Delta$ đơn vị, với $\Delta$ là giá trị $r(u, v)$ nhỏ nhất trên đường tăng luồng vừa tìm được. Đồng thời, ta cũng phải giảm $f(v, u)$ đi $\Delta$ để luôn có $f(u, v) = -f(v, u)$.
 
-Một cách dễ hiểu hơn thì tại bước này, ta tăng luồng trên đường vừa tìm được đến mức tối đa có thể.
+Một cách dễ hiểu hơn thì tại bước này, ta tăng giá trị của luồng trên đường vừa tìm được đến mức tối đa có thể.
 
 Ta lặp đi lặp lại việc tăng luồng cho đến khi nào không thể tìm được đường tăng luồng nữa thì thôi. Khi đó, giá trị của luồng trong cả mạng chính là luồng cực đại mà ta cần tìm.
 
 ![](https://hackmd.io/_uploads/rykkYIhLh.gif)
 
+Hình GIF trên mô tả phương pháp Ford-Fulkerson trên mạng ta vừa lấy ví dụ trong bài viết này. Chú ý rằng có một bước, chúng ta đã phải sử dụng cung ngược.
 
-Hình GIF trên mô tả thuật toán trên mạng ta vừa lấy ví dụ trong bài viết này. Chú ý rằng có một bước, chúng ta đã phải sử dụng cung ngược.
+### Tính đúng đắn
+
+**Định lý**: Phương pháp Ford-Fulkerson cho kết quả là luồng cực đại.
+
+**Chứng minh**:
+
+Giả sử thuật toán cho một luồng có giá trị là $f^{*}$
+
+Tại bước cuối cùng của thuật toán, chúng ta không thể tìm được một đường tăng luồng nào từ $s$ tới $t$ nữa. Gọi $S$ là tập tất cả các đỉnh trên đồ thị có thể đi tới từ $s$ theo một đường tăng luồng, và $T$ là tập các đỉnh còn lại. Khi đó $(S, T)$ là một lát cắt.
+Ta chứng minh $f^{*} = c(S, T)$. Nhắc lại rằng $c(S, T)$ là khả năng thông qua của lát cắt $(S, T)$ 
+
+Gọi $(u, v)$ là một cạnh bất kỳ nối từ $S$ sang $T$, với $u \in S, v \in T$. Cạnh $(u, v)$ phải thoả mãn $f(u, v) = c(u, v)$, nếu không sẽ tồn tại một đường tăng luồng đi từ $s$ sang tập $T$, trái với giả thiết.
+Lại gọi $(u', v')$ là một cạnh bất kỳ nối từ $T$ sang $S$, với $u' \in T, v' \in S$. Nếu $f(u', v') > 0$, sẽ tồn tại một đường tăng luồng đi từ $v'$ sang $u'$ do $f(v', u') < 0 = c(u', v')$, trái với giả thiết không tồn tại đường đi từ $S$ sang $T$.
+Lấy tổng tất cả các đẳng thức $f(u, v) = c(u, v)$ và $f(v', u') = 0$ như trên, ta được:
+$f^* = c(A, B)$
+
+Theo định lý về luồng và lát cắt ta có $f^* \le c(A, B)$ nên đây là luồng cực đại. (đpcm)
+
+**Hệ quả**: Gọi lát cắt có khả năng thông qua nhỏ nhất là **lát cắt hẹp nhất**. Giá trị này bằng với luồng cực đại trên mạng tương ứng.
+
+**Hệ quả**: Nếu mọi giá trị $c$ trên luồng đều là số nguyên thì giá trị luồng cực đại cũng là số nguyên.
+
+### Tìm đường tăng Luồng
+Để tìm đường tăng luồng, ta chỉ phải tìm một đường để đi từ $s$ tới $t$, qua các cạnh có $r(u, v) = c(u, v) - f(u, v) > 0$. Đây chỉ là một bài toán duyệt đồ thị đơn giản, ta có thể thử áp dụng DFS, BFS, ... để duyệt.
+
+Hai thuật BFS và DFS có độ phức tạp giống nhau, nhưng trên thực tế BFS chạy nhanh hơn DFS một chút khi đi tìm đường tăng luồng. 
+
+### Cài đặt
+``` cpp=
+#include <bits/stdc++.h>
+
+using namespace std;
+
+const int maxn = 1001;
+
+int n, m, s, t;
+vector <int> adj[maxn];		//đồ thị lưu kiểu danh sách kề
+int c[maxn][maxn], f[maxn][maxn], trace[maxn], maxFlow;
+
+//BFS để tìm đường tăng luồng
+void bfs()
+{
+    fill(trace, trace + n + 1, 0);
+    trace[s] = -1;
+
+    queue <int> bfsQueue;
+    bfsQueue.push(s);
+
+    while (!bfsQueue.empty())
+    {
+        int u = bfsQueue.front();
+        bfsQueue.pop();
+        for (auto v : adj[u])
+        {
+			//Không dẫm lại đường cũ theo đúng luật BFS
+			if (trace[v]) continue;
+			
+			//Không đi qua cạnh có r(u, v) = c(u, v) - f(u, v) = 0
+            if (f[u][v] - c[u][v] == 0) continue;
+			
+			//Các công việc còn lại của BFS
+            trace[v] = u;
+            bfsQueue.push(v);
+        }
+    }
+}
+
+//Hàm tăng luồng
+void incFlow()
+{
+    //Đi ngược theo đường tăng luồng để tìm giá trị delta = c - f tốt nhất
+	int delta = 1e9 + 7;
+    int v = t;
+    while (v != s)
+    {
+        int u = trace[v];
+        delta = min(delta, c[u][v] - f[u][v]);
+        v = u;
+    }
+
+    maxFlow += delta;
+	
+	//Đi ngược theo đường tăng luồng một lần nữa để cập nhật giá trị f
+    v = t;
+    while (v != s)
+    {
+        int u = trace[v];
+        f[u][v] += delta;
+        f[v][u] -= delta;
+        v = u;
+    }
+
+}
+
+int32_t main()
+{
+    cin >> n >> m >> s >> t;
+    for (int u, v, i = 1; i <= m; i ++)
+    {
+        cin >> u >> v;
+        cin >> c[u][v];
+        adj[u].push_back(v);
+        adj[v].push_back(u);	//lưu thêm cạnh ngược để có thể chạy qua nó khi tăng luồng
+    }
+
+    maxFlow = 0;
+    trace[t] = -1;
+	
+	//Tăng luồng đến khi không tăng được nữa
+    while (trace[t])
+    {
+        bfs();
+        if (trace[t]) incFlow();
+    }
+
+    cout << maxFlow;
+
+    return 0;
+}
+```
