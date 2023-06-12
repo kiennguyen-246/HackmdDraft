@@ -27,17 +27,10 @@ Một đồ thị $G(V, E)$ được gọi là **mạng** (network) nếu nó l�
 
 Một **luồng** (flow) trên mạng $G(V, E)$ là một phép gán cho mỗi cung $(u, v)$ một số thực $f(u, v)$ thoả mãn:
 - Luồng trên mỗi cung có giá trị không vượt quá khả năng thông qua của cung đó:
-$0 <= $f(u, v) <= c(u, v) \forall u, v \in V$
-- Với mọi đỉnh $v$ không trùng với đỉnh phát $s$ và đỉnh thu $t$, tổng luồng trên các cung đi vào $v$ bằng tổng luồng trên các cung đi ra $v$.
-$\sum_{
-\begin{subarray}{l}
-   v \in V, \exists (v, u) \in E
-\end{subarray}} f(v, u) = 
-\sum_{
-\begin{subarray}{l}
-   w \in V, \exists (u, w) \in E
-\end{subarray}} f(v, u)$
-Tính chất này tương đối giống với định luật I Kirchoff của dòng điện.
+$0 \le f(u, v) \le c(u, v), \forall u, v \in V$
+- Với mọi đỉnh $v$ không trùng với đỉnh phát $s$ và đỉnh thu $t$, tổng luồng trên các cung đi vào $v$ bằng tổng luồng trên các cung đi ra $v$. Tính chất này tương đối giống với định luật I Kirchoff của dòng điện.
+$\sum\limits_{v \in V, \exists (v, u) \in E} f(v, u) = 
+\sum\limits_{w \in V, \exists (u, w) \in E} f(u, w)$
 - Giá trị $f(u, v)$ được gọi là **luồng trên cung $(u, v)$**
 - **Giá trị của luồng** là tổng luồng trên các cung đi ra khỏi đỉnh phát, cũng chính là tổng luồng trên các cung đi ra khỏi đỉnh thu.
 
@@ -47,39 +40,33 @@ Tính chất này tương đối giống với định luật I Kirchoff của d
 
 Một **lát cắt** (cut) $(A, B)$ trên mạng là một cách chia các đỉnh trên đồ thị mạng thành hai tập hợp sao cho $s \in A, t \in B$.
 Tổng các giá trị khả năng thông qua trên các cung nối giữa một đỉnh thuộc $A$ và một đỉnh thuộc $B$ được gọi là **khả năng thông qua** (cut value) của lát cắt $(A, B)$
- $c(A, B) = 
-\sum_{
-\begin{subarray}{l}
-   u \in A, v \in B
-\end{subarray}} c(u, v)$
-![Lát cắt]()
+ 
+ $c(A, B) = \sum\limits_{u \in A, v \in B} c(u, v)$
+ 
+ ![](https://hackmd.io/_uploads/BJm1po283.png)
+
+*Một lát cắt hợp lệ. Mỗi tập con của lát cắt được đánh dấu bằng một màu khác nhau. Lát cắt này có khả năng thông qua là $6 + 5 + 1 + 6 = 17$.*
 
 **Định lý**: Tất cả mọi luồng đều có giá trị không lớn hơn khả năng thông qua của một lát cắt bất kỳ.
 
 **Chứng minh**:
 
 Xét luồng có giá trị $f$ và lát cắt $(A, B)$ trên một mạng bất kỳ. Ta có: 
- $f$
-$ = 
-\sum_{
+
+$f = 
+\sum\limits_{u \in A, v \in B} f(u, v) - 
+\sum\limits_{u \in B, v \in A} f(u, v) \\
+\le
+\sum\limits_{
 \begin{subarray}{l}
    u \in A, v \in B
-\end{subarray}} f(u, v) - 
-\sum_{
-\begin{subarray}{l}
-   u \in B, v \in A
-\end{subarray}} f(u, v)$
-$\le
-\sum_{
+\end{subarray}} f(u, v) \\
+\le
+\sum\limits_{
 \begin{subarray}{l}
    u \in A, v \in B
-\end{subarray}} f(u, v)$
-$\le
-\sum_{
-\begin{subarray}{l}
-   u \in A, v \in B
-\end{subarray}} c(u, v)$
-$= c(A, B)$ (đpcm)
+\end{subarray}} c(u, v) \\
+= c(A, B)$ (đpcm)
 
 Có rất nhiều hình ảnh thực tế để miêu tả một mạng và luồng như trên, như một mạng điện, một mạng kết nối dữ liệu giữa các máy, ... Nếu ta hiểu mạng như một hệ thống ống nước, nó sẽ như sau:
 - Nước chảy qua một hệ thống các ống, từ nguồn nước (đỉnh phát) đến bồn chứa (đỉnh thu).
@@ -148,24 +135,27 @@ Hình GIF trên mô tả phương pháp Ford-Fulkerson trên mạng ta vừa l�
 
 Giả sử thuật toán cho một luồng có giá trị là $f^{*}$
 
-Tại bước cuối cùng của thuật toán, chúng ta không thể tìm được một đường tăng luồng nào từ $s$ tới $t$ nữa. Gọi $S$ là tập tất cả các đỉnh trên đồ thị có thể đi tới từ $s$ theo một đường tăng luồng, và $T$ là tập các đỉnh còn lại. Khi đó $(S, T)$ là một lát cắt.
+Tại bước cuối cùng của thuật toán, chúng ta không thể tìm được một đường tăng luồng nào từ $s$ tới $t$ nữa. Gọi $S$ là tập tất cả các đỉnh trên đồ thị có thể đi tới từ $s$ theo một đường tăng luồng, và $T$ là tập các đỉnh còn lại. Khi đó $(S, T)$ là một lát cắt trên mạng.
+
 Ta chứng minh $f^{*} = c(S, T)$. Nhắc lại rằng $c(S, T)$ là khả năng thông qua của lát cắt $(S, T)$ 
 
 Gọi $(u, v)$ là một cạnh bất kỳ nối từ $S$ sang $T$, với $u \in S, v \in T$. Cạnh $(u, v)$ phải thoả mãn $f(u, v) = c(u, v)$, nếu không sẽ tồn tại một đường tăng luồng đi từ $s$ sang tập $T$, trái với giả thiết.
-Lại gọi $(u', v')$ là một cạnh bất kỳ nối từ $T$ sang $S$, với $u' \in T, v' \in S$. Nếu $f(u', v') > 0$, sẽ tồn tại một đường tăng luồng đi từ $v'$ sang $u'$ do $f(v', u') < 0 = c(u', v')$, trái với giả thiết không tồn tại đường đi từ $S$ sang $T$.
-Lấy tổng tất cả các đẳng thức $f(u, v) = c(u, v)$ và $f(v', u') = 0$ như trên, ta được:
+
+Lại gọi $(u', v')$ là một cạnh bất kỳ nối từ $T$ sang $S$, với $u' \in T, v' \in S$. Nếu $f(u', v') > 0$, sẽ tồn tại một đường tăng luồng đi qua cạnh ngược $(v', u')$ do $f(v', u') < 0 = c(u', v')$, trái với giả thiết không tồn tại đường đi từ $S$ sang $T$.
+
+Lấy tổng tất cả các đẳng thức $f(u, v) = c(u, v)$ và $f(v', u') = 0$ với mọi cặp đỉnh thoả mãn như trên, ta được:
 $f^* = c(A, B)$
 
-Theo định lý về luồng và lát cắt ta có $f^* \le c(A, B)$ nên đây là luồng cực đại. (đpcm)
+Nhưng theo định lý về luồng và lát cắt ta có $f^* \le c(A, B)$ nên đây là luồng cực đại. (đpcm)
 
-**Hệ quả**: Gọi lát cắt có khả năng thông qua nhỏ nhất là **lát cắt hẹp nhất**. Giá trị này bằng với luồng cực đại trên mạng tương ứng.
-
-**Hệ quả**: Nếu mọi giá trị $c$ trên luồng đều là số nguyên thì giá trị luồng cực đại cũng là số nguyên.
+**Hệ quả**: 
+- Khả năng thông qua của lát cắt hẹp nhất trên một mạng bằng giá trị của luồng cực đại trên mạng đó. **Lát cắt hẹp nhất** (mincut) là lát cắt có khả năng thông qua nhỏ nhất trong số mọi lát cắt thuộc mạng.
+- Nếu mọi giá trị $c$ trên luồng đều là số nguyên thì giá trị luồng cực đại cũng là số nguyên.
 
 ### Tìm đường tăng Luồng
 Để tìm đường tăng luồng, ta chỉ phải tìm một đường để đi từ $s$ tới $t$, qua các cạnh có $r(u, v) = c(u, v) - f(u, v) > 0$. Đây chỉ là một bài toán duyệt đồ thị đơn giản, ta có thể thử áp dụng DFS, BFS, ... để duyệt.
 
-Hai thuật BFS và DFS có độ phức tạp giống nhau, nhưng trên thực tế BFS chạy nhanh hơn DFS một chút khi đi tìm đường tăng luồng. 
+Hai thuật BFS và DFS có độ phức tạp giống nhau, nhưng trên thực tế BFS chạy nhanh hơn DFS một chút khi đi tìm đường tăng luồng. Thuật Edmonds-Karp sử dụng BFS để tìm đường tăng luồng.
 
 ### Cài đặt
 ``` cpp=
@@ -176,7 +166,7 @@ using namespace std;
 const int maxn = 1001;
 
 int n, m, s, t;
-vector <int> adj[maxn];		//đồ thị lưu kiểu danh sách kề
+vector <int> adj[maxn];    //đồ thị lưu kiểu danh sách kề
 int c[maxn][maxn], f[maxn][maxn], trace[maxn], maxFlow;
 
 //BFS để tìm đường tăng luồng
@@ -194,13 +184,13 @@ void bfs()
         bfsQueue.pop();
         for (auto v : adj[u])
         {
-			//Không dẫm lại đường cũ theo đúng luật BFS
-			if (trace[v]) continue;
+            //Không dẫm lại đường cũ theo đúng luật BFS
+            if (trace[v]) continue;
 			
-			//Không đi qua cạnh có r(u, v) = c(u, v) - f(u, v) = 0
+	    //Không đi qua cạnh có r(u, v) = c(u, v) - f(u, v) = 0
             if (f[u][v] - c[u][v] == 0) continue;
 			
-			//Các công việc còn lại của BFS
+            //Các công việc còn lại của BFS
             trace[v] = u;
             bfsQueue.push(v);
         }
@@ -211,7 +201,7 @@ void bfs()
 void incFlow()
 {
     //Đi ngược theo đường tăng luồng để tìm giá trị delta = c - f tốt nhất
-	int delta = 1e9 + 7;
+    int delta = 1e9 + 7;
     int v = t;
     while (v != s)
     {
@@ -222,7 +212,7 @@ void incFlow()
 
     maxFlow += delta;
 	
-	//Đi ngược theo đường tăng luồng một lần nữa để cập nhật giá trị f
+    //Đi ngược theo đường tăng luồng một lần nữa để cập nhật giá trị f
     v = t;
     while (v != s)
     {
@@ -248,7 +238,7 @@ int32_t main()
     maxFlow = 0;
     trace[t] = -1;
 	
-	//Tăng luồng đến khi không tăng được nữa
+    //Tăng luồng đến khi không tăng được nữa
     while (trace[t])
     {
         bfs();
