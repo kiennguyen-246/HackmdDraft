@@ -103,7 +103,8 @@ Với các giá trị $r(u, v)$ này, ta có thể xây dựng một **đồ th�
 
 Một **đường tăng luồng** (augmenting path) là một đường đi đơn trên đồ thị thặng dư. Đối chiếu lại với đồ thị gốc, đó sẽ là một đường đi đơn (có thể đi ngược chiều) qua những cạnh có $r(u, v) > 0$. Trên đường này, chúng ta có thể thực hiện tăng giá trị của luồng trên mỗi cạnh.
 
-![](https://hackmd.io/_uploads/H1DsnroU2.png)
+![](https://hackmd.io/_uploads/HkN9snHD2.png)
+
 
 Đường màu xanh-đỏ là một đường tăng luồng trên đồ thị thặng dư trên. Các cạnh đứt chính là các cạnh "ngược" so với mạng ban đầu; chúng có giá trị $f$ âm.
 
@@ -126,7 +127,8 @@ Một cách dễ hiểu hơn thì tại bước này, ta tăng giá trị của 
 
 Ta lặp đi lặp lại việc tăng luồng cho đến khi nào không thể tìm được đường tăng luồng nữa thì thôi. Khi đó, giá trị của luồng trong cả mạng chính là luồng cực đại mà ta cần tìm.
 
-![Đồ thị thặng dư]()
+![](https://hackmd.io/_uploads/BJp_s3HPn.gif)
+
 
 Hình GIF trên mô tả phương pháp Ford-Fulkerson trên mạng ta vừa lấy ví dụ trong bài viết này. Chú ý rằng có một bước, chúng ta đã phải sử dụng cạnh ngược.
 
@@ -262,30 +264,132 @@ Bạn có thể tham khảo chứng minh độ phức tạp này tại [đây](h
 Khi thực hiện giải thuật Edmonds-Karp, các đánh giá ban đầu về độ phức tạp có thể sai lệch nhiều so với thực tế. Mặc dù độ phức tạp của thuật toán là tương đối lớn trong trường hợp tệ nhất, nó vẫn hoạt động tương đối hiệu quả trong hầu hết các trường hợp. 
 
 ## Thuật toán Dinic
-Như đã nói ở trên, tuy đánh giá về độ phức tạp của thuật Edmonds-Karp không hề đẹp, nó vẫn chạy rất ổn trong thực tế. Tất nhiên, vẫn có những trường hợp thuật này chạy chưa được ổn lắm, ví dụ như khi mạng có rất nhiều cạnh, ví dụ có dạng của đồ thị đầy đủ với $frac{n(n - 1)}{2}$ thì độ phức tạp của thuật toán sẽ là $O(n^5)$, rất khủng khiếp. Thuật toán Dinic sẽ làm giảm độ phức tạp của thuật đi một chút. 
+Như đã nói ở trên, tuy đánh giá về độ phức tạp của thuật Edmonds-Karp không hề đẹp, nó vẫn chạy rất ổn trong thực tế. Tất nhiên, vẫn có những trường hợp thuật này chạy chưa được ổn lắm, điển hình là khi mạng có rất nhiều cạnh, ví dụ có dạng của đồ thị đầy đủ với $\frac{n(n - 1)}{2}$ cạnh thì độ phức tạp của thuật toán sẽ là $O(n^5)$, rất khủng khiếp. Thuật toán Dinic sẽ làm giảm độ phức tạp của thuật đi một chút. 
 
-Thuật toán này được Yefim A. Dinitz (nhiều tài liệu dịch tên là E. A. Dinic) đề xuất năm 1970. Nó được chứng minh là có độ phức tạp $O(mn^2)$, tốt hơn thuật toán Edmonds-Karp.
+Thuật toán này được Yefim A. Dinitz (nhiều tài liệu để tên là E. A. Dinic) đề xuất năm 1970. Nó được chứng minh là có độ phức tạp $O(mn^2)$, tốt hơn thuật toán Edmonds-Karp.
 
 Thuật toán Dinic sử dụng nhiều ý tưởng của phương pháp Ford-Fulkerson để tìm đường tăng luồng. Bạn đọc nên đọc phần trên trước hoặc có hiểu biết về phương pháp Ford-Fulkerson để đọc và hiểu phần này.
 
 ### Các khái niệm
 - Thuật toán Dinic vẫn sử dụng khái niệm **đồ thị thặng dư** giống như trong phương pháp Ford-Fulkerson. Nhắc lại, đồ thị thặng dư là đồ thị mà ứng với mỗi cạnh $(u, v)$ sẽ có hai cạnh, một cạnh $(u, v)$ có trọng số $r(u, v) = c(u, v) - f(u, v)$ và một cạnh $(v, u)$ có trọng số $f(u, v)$.
-- Một **đường cản** là một đường đi trên mạng sao cho mọi đường đi từ $s$ đến $t$ đều chứa ít nhất một cạnh nằm trên đường này.
-- Gọi $d(u)$ là **mức/cấp** của đỉnh $u$ - đường đi ngắn nhất (tính bằng số cạnh) để đi từ $s$ đến $u$. Định nghĩa **đồ thị phân cấp** của đồ thị ban đầu là đồ thị chỉ chứa các cạnh $(u, v)$ **có trọng số dương** thoả mãn $d(v) = d(u) + 1$, tức là các cạnh tham gia tạo thành đường đi ngắn nhất đến tất cả các đỉnh.	 
+- Một **luồng cản** (blocked flow) là một tập các cạnh trên đồ thị có dạng giống như luồng trên mạng sao cho mọi đường đi từ $s$ đến $t$ đều chứa ít nhất một cạnh thuộc tập này.
+- Gọi $d(u)$ là **mức/cấp** (level) của đỉnh $u$ - đường đi ngắn nhất (tính bằng số cạnh) để đi từ $s$ đến $u$. Định nghĩa **đồ thị phân cấp** (layered network) của đồ thị ban đầu là đồ thị chỉ chứa các cạnh $(u, v)$ **có trọng số dương** thoả mãn $d(v) = d(u) + 1$, tức là các cạnh tham gia tạo thành đường đi ngắn nhất đến tất cả các đỉnh.
+
+![](https://hackmd.io/_uploads/BkVeipHvh.png)
+
+*Đồ thị phân cấp (các đường có màu) và luồng cản (xanh lam) của đồ thị thặng dư*
+
+
 
 ### Thuật toán
-Ta dựng đồ thị phân cấp của đồ thị thặng dư. Trên đồ thị này, ta liên tục tìm một đường cản rồi tăng luồng ở tất cả các cạnh trên đường cản này càng nhiều càng tốt. Nói cách khác, đây là phương pháp Ford-Fulkerson với đường tăng luồng là đường cản. Lặp lại quá trình trên cho tới khi ta không thể tìm được đường đi từ $s$ tới $t$ trên đồ thị phân cấp nữa, hay $d(t)$ không xác định.
+Ta dựng đồ thị phân cấp của đồ thị thặng dư. Trên đồ thị này, ta liên tìm một luồng cản rồi tăng luồng ở tất cả các cạnh trên luồng cản này càng nhiều càng tốt. Nói cách khác, đây là phương pháp Ford-Fulkerson với các đường tăng luồng là các đường cản trong luồng cản. Lặp lại quá trình trên cho tới khi ta không thể tìm được đường đi từ $s$ tới $t$ trên đồ thị phân cấp nữa, hay $d(t)$ không xác định.
 
-Để tìm đường cản, ta sử dụng DFS để tìm một đường đi có trọng số dương từ $s$ tới $t$ trên đồ thị phân cấp. Đây là lý do thuật Dinic được gọi là "dùng cả BFS và DFS để tìm luồng".
+Để tìm luồng cản, ta sử dụng DFS để tìm từng đường cản một. Mỗi đường cản là một đường đi có trọng số dương từ $s$ tới $t$ trên đồ thị phân cấp. Đây là lý do thuật Dinic được gọi là "dùng cả BFS và DFS để tìm luồng".
 
 Để tối ưu thuật toán, ta có thể:
-- Không dựng đồ thị thặng dư và đồ thị phân cấp. Cũng như thuật toán Edmonds-Karp, ta hoàn toàn có thể sử dụng thêm các "cạnh" ngược với giá trị luồng âm để biểu diễn các cạnh ngược trong đồ thị thặng dư. Việc sử dụng đồ thị phân cấp thì chỉ là đánh các nhãn $d(u)$ cho các đỉnh $u$ của đồ thị, rồi kiểm tra $c(u, v) - f(u, v) > 0)$ và $d(u) + 1 = d(v)$ để biết cạnh $(u, v)$ có thuộc đồ thị phân cấp không.
-- Chỉ DFS từ những đỉnh chưa xét trong những lần tăng luồng trước đó, với cùng một bộ $d$ (hay cùng một đồ thị phân cấp). Khi tìm được đường cản, ta sẽ tăng luồng của đường này lên, khiến cho việc tiếp tục sử dụng một cạnh nào đó của đường này để tăng luồng trở nên vô nghĩa. Ta có thể lưu lại cạnh cuối cùng được xét trong mỗi lần đi tìm đường cản, rồi tiếp tục tìm đường cản ở đây. Đến khi không tìm được đường cản nữa, ta mới đánh lại $d$ cho các đỉnh.
-- Vừa DFS vừa tăng luồng. Mỗi lần đi tìm đường cản, ta có thể kết hợp lưu lại giá trị $\delta$ nhỏ nhất trên đường này luôn, và khi đường này đến được $t$, ta thực hiện tăng luồng trên những cạnh đã xét.
+- Không dựng đồ thị thặng dư và đồ thị phân cấp. Cũng như thuật toán Edmonds-Karp, ta hoàn toàn có thể sử dụng thêm các "cạnh" ngược với giá trị luồng âm để biểu diễn các cạnh ngược trong đồ thị thặng dư. Việc sử dụng đồ thị phân cấp thì chỉ là đánh các nhãn $d(u)$ cho các đỉnh $u$ của đồ thị, rồi kiểm tra $c(u, v) - f(u, v) > 0$ và $d(u) + 1 = d(v)$ để biết cạnh $(u, v)$ (kể cả ngược) có thuộc đồ thị phân cấp không.
+- Tại mỗi đỉnh, chỉ DFS từ cạnh cuối cùng được xét trong lần tìm đường cản trước đó với cùng một bộ $d$ (hay cùng một đồ thị phân cấp). Việc tiếp tục sử dụng một cạnh nào đó của các đường trước đó để tăng luồng là vô nghĩa, vì trong những lần tìm trước đó, ta đã khẳng định là chúng không thể tạo ra đường cản mới rồi. Khi không tìm được bất kỳ đường cản nào nữa, luồng cản hiện tại coi như đã xong. Ta tăng luồng và đánh lại $d$ cho các đỉnh.
+
+![](https://hackmd.io/_uploads/BJttQ0Hvn.gif)
+
+Hình GIF trên mô tả thuật toán Dinic. Các cạnh có màu là các cạnh nằm trên đồ thị phân cấp. Các cạnh màu xanh và đỏ là các cạnh nằm trên luồng cản tìm được sau mỗi bước.
+
 
 ### Tính đúng đắn
 
 ### Cài đặt
+Trong bước DFS, để lập trình đơn giản hơn một chút, ta sẽ kết hợp DFS và tăng luồng. Mỗi lần đi tìm đường cản, ta có thể kết hợp lưu lại giá trị $\Delta$ nhỏ nhất trên đường này luôn, và khi đường này đến được $t$, ta thực hiện tăng luồng trên những cạnh đã xét.
+``` cpp=
+#include <bits/stdc++.h>
+
+using namespace std;
+
+const int maxn = 1001;
+const int inf = 1e9 + 7;
+
+int n, m, s, t;
+vector <int> adj[maxn];
+int c[maxn][maxn], f[maxn][maxn], d[maxn], maxFlow;
+
+//chỉ số của cạnh cuối cùng được xét trong danh sách kề
+int curVertexId[maxn];    
+
+//BFS để tìm mức (d) của mỗi đỉnh
+void bfs()
+{
+    fill(d, d + n + 1, inf);
+    d[s] = 0;
+
+    queue <int> bfsQueue;
+    bfsQueue.push(s);
+
+    while (!bfsQueue.empty())
+    {
+        int u = bfsQueue.front();
+        bfsQueue.pop();
+        for (auto v : adj[u])
+        {
+	    if (d[v] != inf) continue;
+            if (f[u][v] - c[u][v] == 0) continue;  //chỉ xét cạnh dương
+            d[v] = d[u] + 1;
+            bfsQueue.push(v);
+        }
+    }
+}
+
+//DFS tìm luồng cản.
+//curDelta: giá trị delta tốt nhất hiện có trên đường từ s tới u
+//Hàm trả về giá trị delta tốt nhất sau khi tìm xong đường cản.
+int dfs(int u, int curDelta)
+{
+    if (curDelta == 0) return 0;
+    if (u == t) return curDelta;
+    
+    //Chỉ xét từ cạnh cuối cùng
+    for (; curVertexId[u] < adj[u].size(); curVertexId[u] ++)
+    {
+        int v = adj[u][curVertexId[u]];
+                                   
+        //Chỉ xét cạnh thuộc đồ thị phân lớp
+        if (d[v] != d[u] + 1) continue;
+        if (f[u][v] == c[u][v]) continue;
+                                   
+        //Thực hiện tăng luồng
+        int delta = dfs(v, min(c[u][v] - f[u][v], curDelta));
+        if (delta == 0) continue;
+        f[u][v] += delta;
+        f[v][u] -= delta;
+        return delta;
+    }
+    return 0;
+}
+
+int32_t main()
+{
+    cin >> n >> m >> s >> t;
+    for (int u, v, i = 1; i <= m; i ++)
+    {
+        cin >> u >> v;
+        cin >> c[u][v];
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+    maxFlow = 0;
+
+    while (true)
+    {
+        bfs();
+        if (d[t] == inf) break;
+        for (int i = 1; i <= n; i ++) curVertexId[i] = 0;
+        while (int delta = dfs(s, inf))
+            maxFlow += delta;
+    }
+
+    cout << maxFlow;
+
+    return 0;
+}
+```
 
 ### Độ phức tạp
 
