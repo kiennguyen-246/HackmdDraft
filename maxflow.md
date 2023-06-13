@@ -87,7 +87,9 @@ Năm 1956, L. R. Ford Jr. và D. R. Fulkerson đề xuất một phương pháp 
 
 Nhiều tài liệu mà chúng ta đang dùng có sử dụng cụm từ "thuật toán Ford-Fulkerson" để gọi thuật tìm luồng cực đại hoàn chỉnh, và biến "thuật toán Edmonds-Karp" thành một thuật xa lạ kì quặc nào đó. Điều này có lẽ cũng ... không hẳn là sai. Bài viết này sẽ sử dụng tên Edmonds-Karp cho thuật toán, và chỉ gọi là "phương pháp Ford-Fulkerson" thôi. Bạn đọc muốn hiểu theo cách nào cũng được.
 
-### Đường tăng luồng
+### Các khái niệm
+Giả sử tại một thời điểm, ta đã có một luồng trên đồ thị, với giá trị luồng trên cạnh $(u, v)$ là $f(u, v)$.
+
 Với mọi cạnh $(u, v)$, ta định nghĩa thêm giá trị $f(v, u) = -f(u, v)$. Về mặt ý nghĩa, việc định nghĩa này cho ta biết luồng hiện tại trên cạnh này có thể giảm đi một lượng bao nhiêu.
 Lưu ý rằng ta **không** định nghĩa $c(v, u) = c(u, v)$, giá trị này vẫn được mặc định bằng $0$.
 
@@ -95,19 +97,21 @@ Lưu ý rằng ta **không** định nghĩa $c(v, u) = c(u, v)$, giá trị này
 $r(u, v) = c(u, v) - f(u, v)$
 Giá trị này cũng áp dụng cho cả các cạnh đảo (cạnh có luồng âm), khi đó $r(v, u) = 0 - f(v, u) = f(u, v)$.
 
-Với các giá trị $r(u, v)$ này, ta có thể xây dựng một **đồ thị tăng luồng/đồ thị thặng dư** (residual network), gồm các cạnh $(u, v)$, mỗi cạnh có trọng số là $r(u, v)$. Mỗi cạnh cho ta biết có thể tăng/giảm luồng trên đồ thị gốc bao nhiêu.
+Với các giá trị $r(u, v)$ này, ta có thể xây dựng một **đồ thị thặng dư/đồ thị tăng luồng** (residual network). Ứng với mỗi cạnh $(u, v) trên mạng ban đầu, trên đồ thị thặng dư sẽ có hai cạnh:
+- Cạnh $(u, v)$, với trọng số là $r(u, v)$. Mỗi cạnh loại này cho ta biết có thể tăng luồng trên đồ thị gốc bao nhiêu.
+- Cạnh $(v, u)$, với trọng số là $f(u, v)$. Mỗi cạnh loại này cho ta biết có thể giảm luồng trên đồ thị gốc bao nhiêu.
 
-Một **đường tăng luồng** (augmenting path) là một đường đi đơn trên đồ thị tăng luồng. Đối chiếu lại với đồ thị gốc, đó sẽ là một đường đi đơn (có thể đi ngược chiều) qua những cạnh có $r(u, v) > 0$. Trên đường này, chúng ta có thể thực hiện tăng giá trị của luồng trên mỗi cạnh.
+Một **đường tăng luồng** (augmenting path) là một đường đi đơn trên đồ thị thặng dư. Đối chiếu lại với đồ thị gốc, đó sẽ là một đường đi đơn (có thể đi ngược chiều) qua những cạnh có $r(u, v) > 0$. Trên đường này, chúng ta có thể thực hiện tăng giá trị của luồng trên mỗi cạnh.
 
 ![](https://hackmd.io/_uploads/H1DsnroU2.png)
 
-Đường màu xanh-đỏ là một đường tăng luồng trên đồ thị tăng luồng trên. Các cạnh đứt chính là các cạnh "ngược" so với mạng ban đầu; chúng có giá trị $f$ âm.
+Đường màu xanh-đỏ là một đường tăng luồng trên đồ thị thặng dư trên. Các cạnh đứt chính là các cạnh "ngược" so với mạng ban đầu; chúng có giá trị $f$ âm.
 
 ![](https://hackmd.io/_uploads/r1OzTrj83.png)
 
-Đem đối chiếu đồ thị tăng luồng trên về đồ thị gốc, ta được đường tăng luồng như thế này. Trong hình dưới, giá trị của luồng ($f$) trên các cạnh thuộc đường tăng luồng đã được tăng $1$ đơn vị.
+Đem đối chiếu đồ thị thặng dư trên về đồ thị gốc, ta được đường tăng luồng như thế này. Trong hình dưới, giá trị của luồng ($f$) trên các cạnh thuộc đường tăng luồng đã được tăng $1$ đơn vị.
 
-Việc xây dựng cả một đồ thị tăng luồng sau từng bước rất tốn thời gian và bộ nhớ. Vì vậy, chúng ta sẽ chỉ sử dụng đồ thị gốc, và thực hiện tìm đường tăng luồng trực tiếp trên đồ thị này.
+Việc xây dựng cả một đồ thị thặng dư sau từng bước rất tốn thời gian và bộ nhớ. Vì vậy, trong phương pháp Ford-Fulkerson chúng ta sẽ chỉ sử dụng đồ thị gốc, và thực hiện tìm đường tăng luồng trực tiếp trên đồ thị này.
 
 Còn nếu bạn muốn hiểu theo kiểu "ống nước" thì đường tăng luồng có thể coi như một đường nước chảy từ nguồn đến bể chứa. Đối với các "ống đi ngược" như "ống" $(5, 2)$ trên hình, ta hiểu đây là một cách phân phối lại nước: thêm $1$ đơn vị nước vào nút $5$ sẽ dẫn đến việc phải bớt $1$ đơn vị từ ống $(2, 5)$ để đảm bảo đoạn sau vẫn đủ nước; ở đầu $2$ phần nước thay vì chảy vào ống này đi ra đầu $5$ thì nó sẽ đưa phần nước này sang ống $(2, 4)$.
 
@@ -122,7 +126,7 @@ Một cách dễ hiểu hơn thì tại bước này, ta tăng giá trị của 
 
 Ta lặp đi lặp lại việc tăng luồng cho đến khi nào không thể tìm được đường tăng luồng nữa thì thôi. Khi đó, giá trị của luồng trong cả mạng chính là luồng cực đại mà ta cần tìm.
 
-![](https://hackmd.io/_uploads/rykkYIhLh.gif)
+![Đồ thị thặng dư]()
 
 Hình GIF trên mô tả phương pháp Ford-Fulkerson trên mạng ta vừa lấy ví dụ trong bài viết này. Chú ý rằng có một bước, chúng ta đã phải sử dụng cạnh ngược.
 
@@ -220,7 +224,6 @@ void incFlow()
         f[v][u] -= delta;
         v = u;
     }
-
 }
 
 int32_t main()
@@ -256,11 +259,39 @@ Trong bài toán chúng ta xét, tất cả các khả năng thông qua của c�
 Với thuật toán Edmonds-Karp, khi sử dụng BFS, sau $O(mn)$ lần tìm đường tăng luồng, chúng ta sẽ tìm được kết quả. Độ phức tạp của thuật toán này là $O(m^2n)$.
 Bạn có thể tham khảo chứng minh độ phức tạp này tại [đây](https://brilliant.org/wiki/edmonds-karp-algorithm/).
 
-## Thuật toán Dinitz
+Khi thực hiện giải thuật Edmonds-Karp, các đánh giá ban đầu về độ phức tạp có thể sai lệch nhiều so với thực tế. Mặc dù độ phức tạp của thuật toán là tương đối lớn trong trường hợp tệ nhất, nó vẫn hoạt động tương đối hiệu quả trong hầu hết các trường hợp. 
 
+## Thuật toán Dinic
+Như đã nói ở trên, tuy đánh giá về độ phức tạp của thuật Edmonds-Karp không hề đẹp, nó vẫn chạy rất ổn trong thực tế. Tất nhiên, vẫn có những trường hợp thuật này chạy chưa được ổn lắm, ví dụ như khi mạng có rất nhiều cạnh, ví dụ có dạng của đồ thị đầy đủ với $frac{n(n - 1)}{2}$ thì độ phức tạp của thuật toán sẽ là $O(n^5)$, rất khủng khiếp. Thuật toán Dinic sẽ làm giảm độ phức tạp của thuật đi một chút. 
+
+Thuật toán này được Yefim A. Dinitz (nhiều tài liệu dịch tên là E. A. Dinic) đề xuất năm 1970. Nó được chứng minh là có độ phức tạp $O(mn^2)$, tốt hơn thuật toán Edmonds-Karp.
+
+Thuật toán Dinic sử dụng nhiều ý tưởng của phương pháp Ford-Fulkerson để tìm đường tăng luồng. Bạn đọc nên đọc phần trên trước hoặc có hiểu biết về phương pháp Ford-Fulkerson để đọc và hiểu phần này.
+
+### Các khái niệm
+- Thuật toán Dinic vẫn sử dụng khái niệm **đồ thị thặng dư** giống như trong phương pháp Ford-Fulkerson. Nhắc lại, đồ thị thặng dư là đồ thị mà ứng với mỗi cạnh $(u, v)$ sẽ có hai cạnh, một cạnh $(u, v)$ có trọng số $r(u, v) = c(u, v) - f(u, v)$ và một cạnh $(v, u)$ có trọng số $f(u, v)$.
+- Một **đường cản** là một đường đi trên mạng sao cho mọi đường đi từ $s$ đến $t$ đều chứa ít nhất một cạnh nằm trên đường này.
+- Gọi $d(u)$ là **mức/cấp** của đỉnh $u$ - đường đi ngắn nhất (tính bằng số cạnh) để đi từ $s$ đến $u$. Định nghĩa **đồ thị phân cấp** của đồ thị ban đầu là đồ thị chỉ chứa các cạnh $(u, v)$ **có trọng số dương** thoả mãn $d(v) = d(u) + 1$, tức là các cạnh tham gia tạo thành đường đi ngắn nhất đến tất cả các đỉnh.	 
+
+### Thuật toán
+Ta dựng đồ thị phân cấp của đồ thị thặng dư. Trên đồ thị này, ta liên tục tìm một đường cản rồi tăng luồng ở tất cả các cạnh trên đường cản này càng nhiều càng tốt. Nói cách khác, đây là phương pháp Ford-Fulkerson với đường tăng luồng là đường cản. Lặp lại quá trình trên cho tới khi ta không thể tìm được đường đi từ $s$ tới $t$ trên đồ thị phân cấp nữa, hay $d(t)$ không xác định.
+
+Để tìm đường cản, ta sử dụng DFS để tìm một đường đi có trọng số dương từ $s$ tới $t$ trên đồ thị phân cấp. Đây là lý do thuật Dinic được gọi là "dùng cả BFS và DFS để tìm luồng".
+
+Để tối ưu thuật toán, ta có thể:
+- Không dựng đồ thị thặng dư và đồ thị phân cấp. Cũng như thuật toán Edmonds-Karp, ta hoàn toàn có thể sử dụng thêm các "cạnh" ngược với giá trị luồng âm để biểu diễn các cạnh ngược trong đồ thị thặng dư. Việc sử dụng đồ thị phân cấp thì chỉ là đánh các nhãn $d(u)$ cho các đỉnh $u$ của đồ thị, rồi kiểm tra $c(u, v) - f(u, v) > 0)$ và $d(u) + 1 = d(v)$ để biết cạnh $(u, v)$ có thuộc đồ thị phân cấp không.
+- Chỉ DFS từ những đỉnh chưa xét trong những lần tăng luồng trước đó, với cùng một bộ $d$ (hay cùng một đồ thị phân cấp). Khi tìm được đường cản, ta sẽ tăng luồng của đường này lên, khiến cho việc tiếp tục sử dụng một cạnh nào đó của đường này để tăng luồng trở nên vô nghĩa. Ta có thể lưu lại cạnh cuối cùng được xét trong mỗi lần đi tìm đường cản, rồi tiếp tục tìm đường cản ở đây. Đến khi không tìm được đường cản nữa, ta mới đánh lại $d$ cho các đỉnh.
+- Vừa DFS vừa tăng luồng. Mỗi lần đi tìm đường cản, ta có thể kết hợp lưu lại giá trị $\delta$ nhỏ nhất trên đường này luôn, và khi đường này đến được $t$, ta thực hiện tăng luồng trên những cạnh đã xét.
+
+### Tính đúng đắn
+
+### Cài đặt
+
+### Độ phức tạp
 
 ## Bài toán ví dụ
 **Đề bài**: Có $n$ người, $n$ ($1 < n \le 200$) việc. Người thứ $i$ thực hiện công viêc $j$ mất $C[i, j]$ đơn vị thời gian. Giả sử tất cả bắt đầu vào thời điểm $0$, hãy tìm cách bố trí mỗi công việc cho mỗi người sao cho thời điểm hoàn thành công việc là sớm nhất có thể.
+
 *Đề bài VNOI*: [ASSIGN1](https://oj.vnoi.info/problem/assign1)
 
 **Phân tích**:
