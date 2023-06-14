@@ -277,9 +277,7 @@ Thuật toán Dinic sử dụng nhiều ý tưởng của phương pháp Ford-Fu
 
 ![](https://hackmd.io/_uploads/BkVeipHvh.png)
 
-*Đồ thị phân cấp (các đường có màu) và luồng cản (xanh lam) của đồ thị thặng dư*
-
-
+*Đồ thị phân cấp (tất cả các đường có màu) và luồng cản (xanh lam) của đồ thị thặng dư*
 
 ### Thuật toán
 Ta dựng đồ thị phân cấp của đồ thị thặng dư. Trên đồ thị này, ta liên tìm một luồng cản rồi tăng luồng ở tất cả các cạnh trên luồng cản này càng nhiều càng tốt. Nói cách khác, đây là phương pháp Ford-Fulkerson với các đường tăng luồng là các đường cản trong luồng cản. Lặp lại quá trình trên cho tới khi ta không thể tìm được đường đi từ $s$ tới $t$ trên đồ thị phân cấp nữa, hay $d(t)$ không xác định.
@@ -292,7 +290,7 @@ Ta dựng đồ thị phân cấp của đồ thị thặng dư. Trên đồ th�
 
 ![](https://hackmd.io/_uploads/BJttQ0Hvn.gif)
 
-Hình GIF trên mô tả thuật toán Dinic. Các cạnh có màu là các cạnh nằm trên đồ thị phân cấp. Các cạnh màu xanh và đỏ là các cạnh nằm trên luồng cản tìm được sau mỗi bước.
+Hình GIF trên mô tả thuật toán Dinic. Tất cả các cạnh có màu đều là các cạnh nằm trên đồ thị phân cấp. Các cạnh màu xanh và đỏ là các cạnh nằm trên luồng cản tìm được sau mỗi bước.
 
 
 ### Tính đúng đắn
@@ -399,8 +397,19 @@ int32_t main()
 *Đề bài VNOI*: [ASSIGN1](https://oj.vnoi.info/problem/assign1)
 
 **Phân tích**:
-Đề bài của bài toán không hề có một dấu vết gì của "luồng cực đại" hay "lát cắt hẹp nhất" cả, thậm chí còn không hề nói gì đến đồ thị. Tuy nhiên, nếu ta biểu diễn bài toán một đồ thị $2n$ đỉnh, với $n$ đỉnh bên trái là $n$ người, $n$ đỉnh bên phải là $n$ công việc, và cạnh nối giữa một đỉnh $i$ bên trái và một đỉnh $j$ bên phải có trọng số là thời gian người $i$ làm xong việc $j$, thì ta sẽ chỉ cần phải chọn $n$ cạnh không chung đỉnh có tổng trọng số nhỏ nhất thôi. Lúc này, bài toán đã xuất hiện một số tính chất giống với bài toán lát cắt hẹp nhất. Tuy nhiên, để đồ thị có dạng mạng, ta phải thêm một đỉnh nguồn và một đỉnh thu. Từ đó, ta sẽ thêm đỉnh nữa, đỉnh nguồn nối với các đỉnh trái và đỉnh thu nối với các đỉnh phải. Trọng số của các cạnh chắc chắn cần là $\infty$, để tránh việc lấy lát cắt hẹp nhất rơi vào những cạnh trung gian này.
+Đề bài của bài toán không hề có một dấu vết gì của "luồng cực đại" hay "lát cắt hẹp nhất" cả, thậm chí còn không hề nói gì đến đồ thị. Tuy nhiên, nếu ta biểu diễn bài toán một đồ thị $2n$ đỉnh, với $n$ đỉnh bên trái là $n$ người, $n$ đỉnh bên phải là $n$ công việc, và cạnh nối giữa một đỉnh $i$ bên trái và một đỉnh $j$ bên phải có trọng số là thời gian người $i$ làm xong việc $j$, thì ta sẽ chỉ cần phải chọn $n$ cạnh không chung đỉnh có tổng trọng số nhỏ nhất thôi. Lúc này, bài toán đã xuất hiện một số tính chất giống với bài toán lát cắt hẹp nhất. Tuy nhiên, để đồ thị có dạng mạng, ta phải thêm một đỉnh nguồn và một đỉnh thu. Từ đó, ta sẽ thêm $2$ đỉnh nữa, đỉnh nguồn nối với các đỉnh trái và đỉnh thu nối với các đỉnh phải. Trọng số của các cạnh chắc chắn cần là $\infty$, để tránh việc lấy lát cắt hẹp nhất rơi vào những cạnh trung gian này.
 
 Phần cài đặt thuật toán trên sẽ dành cho bạn đọc.
 
 **Chú ý thêm**: Đồ thị ta vừa tạo là một **đồ thị hai phía** (đồ thị có thể chia các đỉnh làm hai tập sao cho các đỉnh cùng một tập đôi một không có cạnh nối trực tiếp). Với những bài toán như vậy, sử dụng phương pháp cặp ghép cực đại sẽ cho hiệu quả cao hơn, đồng thời cũng dễ cài đặt hơn dùng luồng cực đại.
+
+## Tài liệu tham khảo
+- Lê Minh Hoàng (2003), *Giải thuật và lập trình*
+- Steven Halim, Felix Halim (2013), *Competitive Programing 3*
+- CP Algorithms: 
+	- [Maximum flow - Ford-Fulkerson and Edmonds-Karp](https://cp-algorithms.com/graph/edmonds_karp.html)
+	- [Maximum flow - Dinic's algorithm](https://cp-algorithms.com/graph/dinic.html)
+- Wikipedia (về lịch sử của các thuật toán)
+- VNOI Wiki: [Luồng cực đại trên mạng - Maxflow network](https://vnoi.info/wiki/translate/topcoder/max-flow-1-luong-cuc-dai-tren-mang-1.md) (bài viết cũ)
+- [Phần chứng minh trên brilliant.org](https://brilliant.org/wiki/edmonds-karp-algorithm/)
+- Reza Zadeh (2014), [CME 305: Discrete Mathematics and Algorithms - Lecture 3](http://stanford.edu/~rezab/classes/cme305/W14/Notes/3.pdf)
