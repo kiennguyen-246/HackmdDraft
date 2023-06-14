@@ -294,6 +294,10 @@ Hình GIF trên mô tả thuật toán Dinic. Tất cả các cạnh có màu đ
 
 
 ### Tính đúng đắn
+**Định lý**: Thuật toán Dinic cho kết quả là luồng cực đại
+
+**Chứng minh**:
+Thuật toán Dinic dừng khi nó không thể tìm một đường cản trên đồ thị phân cấp. Khi đó, không tồn tại một đường đi từ $s$ đến $t$ trên đồ thị này, suy ra trong đồ thị thặng dư cũng không tồn tại một đường như vậy mà không phải đi qua những cạnh có trọng số bằng $0$ - những cạnh đầy. Do vậy luồng tìm được là cực đại (đpcm).
 
 ### Cài đặt
 Trong bước DFS, để lập trình đơn giản hơn một chút, ta sẽ kết hợp DFS và tăng luồng. Mỗi lần đi tìm đường cản, ta có thể kết hợp lưu lại giá trị $\Delta$ nhỏ nhất trên đường này luôn, và khi đường này đến được $t$, ta thực hiện tăng luồng trên những cạnh đã xét.
@@ -390,6 +394,26 @@ int32_t main()
 ```
 
 ### Độ phức tạp
+**Định lý**: Thuật toán Dinic có độ phức tạp là $O(mn^2)
+
+**Chứng minh**:
+Gọi $d_i(u)$ là mức của đỉnh $u$ sau khi thực hiện $i$ lần BFS và gán nhãn $d$. Ta chứng minh hai bổ đề sau:
+
+*Bổ đề 1*: $d_{i + 1}(u) \ge d_i(u)$
+
+Xét vòng BFS thứ $i$, đang xét đến đỉnh $u$. Xét đồ thị $G^R_i$ là đồ thị thặng dư ở lượt BFS thứ $i$. Dễ thấy $G^R_{i + 1}$ luôn bao gồm một số cạnh trong $G^R_i$ cùng với một số cạnh ngược trong $G^R_i$. 
+Tại vòng thứ $i + 1$, trường hợp đường đi từ $s$ đến $u$ không đi qua cạnh ngược, hiển nhiên đường đi này phải xuất hiện trên $G^R_i$, cho nên $d_{i + 1}(u) = d_{i}(u)$. 
+Trường hợp đường đi này chứa cạnh ngược, giả sử cạnh đầu tiên như vậy là cạnh $(w, v)$. Theo trường hợp đầu, $d_{i + 1}(w) = d_{i}(w)$ (1). Ở vòng thứ $i$, đường này vẫn còn đi được, do đó $d_i(w) = d_i(v) + 1$ (2). Nhưng tại vòng $i + 1$, cạnh này trở thành cạnh ngược, cho nên $d_{i + 1}(v) = d_i(w) + 1%$ (3). Từ (1), (2), (3) suy ra $d_{i + 1}(w) \ge d_i(w) + 2$.
+Tóm lại, trong cả hai trường hợp ta đều có $d_{i + 1}(u) >= d_i(u)$. Bổ đề được chứng minh.
+
+*Bổ đề 2*: $d_{i + 1}(t) > d_i(t)$
+Theo bổ đề 1, $d_{i + 1}(t) \ge d_i(t)$. Giả sử d_{i + 1}(t) = d_i(t). Vì $G^R_{i + 1}$ chỉ chứa các cạnh xuôi và cạnh ngược trong $G^R_i$ nên phải tồn tại một đường đi từ $s$ tới $t$, trái với giả thiết một luồng cản được tạo ra. Bổ đề được chứng minh.
+
+Theo bổ đề 2, $d(t)$ tăng nghiêm ngặt, nhưng không vượt quá $n - 1$. Do vậy, thuật toán Dinic sẽ BFS tối đa $n$ lần.
+
+Chi phí cho một lần tìm luồng cản là $O(mn)$, với $O(n)$ dùng cho DFS trên đồ thị phân cấp, và $O(m)$ cho việc duyệt tất cả các cạnh để tìm đường DFS. Lưu ý do duyệt từ cạnh cuối cùng được DFS, đoạn này chỉ mất $O(mn)$ thay vì $O(m^2)$.
+
+Tổng kết hai phần lại, chúng ta có độ phức tạp thuật toán Dinic là $O(mn^2)$. (đpcm)
 
 ## Bài toán ví dụ
 **Đề bài**: Có $n$ người, $n$ ($1 < n \le 200$) việc. Người thứ $i$ thực hiện công viêc $j$ mất $C[i, j]$ đơn vị thời gian. Giả sử tất cả bắt đầu vào thời điểm $0$, hãy tìm cách bố trí mỗi công việc cho mỗi người sao cho thời điểm hoàn thành công việc là sớm nhất có thể.
@@ -402,6 +426,24 @@ int32_t main()
 Phần cài đặt thuật toán trên sẽ dành cho bạn đọc.
 
 **Chú ý thêm**: Đồ thị ta vừa tạo là một **đồ thị hai phía** (đồ thị có thể chia các đỉnh làm hai tập sao cho các đỉnh cùng một tập đôi một không có cạnh nối trực tiếp). Với những bài toán như vậy, sử dụng phương pháp cặp ghép cực đại sẽ cho hiệu quả cao hơn, đồng thời cũng dễ cài đặt hơn dùng luồng cực đại.
+
+## Một số chú ý
+- Như đã nói ở trên, cách đánh giá độ phức tạp của các thuật toán trên có thể sai lệch tương đối so với thực tế. Vì vậy, khi làm những bài luồng, đôi lúc bạn có thể tính ra một độ phức tạp rất lớn, nhưng thuật toán lại chạy tốt. Ngay như bài NKFLOW ở trên, chúng ta vẫn AC được với độ phức tạp $O(m^2n)$.
+- Tuy chênh lệch về độ phức tạp giữa thuật Edmonds-Karp và Dinic là có thể thấy ngay, nhưng khi chạy, thuật Dinic thường cũng không cải thiện được quá nhiều. Các tác giả của *Competitive Programing 3* cũng thừa nhận họ chưa từng gặp bài toán nào AC bằng Dinic mà chạy TLE bằng thuật Edmonds-Karp cả. Tuy nhiên, nếu muốn có sự tối ưu, hãy sử dụng thuật Dinic. Còn nếu bạn muốn một thuật dễ cài đặt, dễ nhớ và dễ hiểu hơn, có thể sử dụng Edmonds-Karp.
+- Edmonds-Karp và Dinic không phải là hai thuật duy nhất để tìm luồng cực đại. Bạn có thể tìm hiểu thêm về thuật [Goldberg-Tarjan](https://cp-algorithms.com/graph/push-relabel.html) (1985) và [MPM](https://cp-algorithms.com/graph/mpm.html) (1978) tại CP Algorithms. Gần đây, đã có những thuật tinh vi hơn tìm được luồng với độ phức tạp $O(mn)$, như thuật của King, Rao, and Tarjan (1994), của Orlin (2012).
+
+## Luyện tập
+- [STNODE](https://oj.vnoi.info/problem/stnode)
+- [KWAY](https://oj.vnoi.info/problem/kway)
+- [JOBSET](https://oj.vnoi.info/problem/jobset)
+- [Delivery Bears](https://codeforces.com/problemset/problem/653/D)
+- [Soldier and Traveling](https://codeforces.com/contest/546/problem/E)
+- [Array and Operations](https://codeforces.com/contest/498/problem/c)
+- [Red-Blue Graph](https://codeforces.com/contest/1288/problem/f)
+- [Download Speed](https://cses.fi/problemset/task/1694)
+- [Police Chase](https://cses.fi/problemset/task/1695)
+- [School Dance](https://cses.fi/problemset/task/1696)
+Ngoài ra, bạn đọc có thể luyện tập bằng các bài tập khác có gắn tag `flows` trên VNOJ và các OJ khác.
 
 ## Tài liệu tham khảo
 - Lê Minh Hoàng (2003), *Giải thuật và lập trình*
