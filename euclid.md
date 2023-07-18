@@ -23,7 +23,7 @@ Nếu $d$ là ước của $a$ và $b$, hiển nhiên nó cũng là ước của
 
 Nếu $d'$ là ước của $b$ và $b - a$, hiển nhiên nó cũng là ước của $b + (a - b) = a$.
 
-Do vậy với ba số $a$, $b$, $a - b$, nếu $d$ là ước của một trong ba số trên thì sẽ là ước của hai số còn lại, tức là $ƯC(a, b) = ƯC(b, a - b)$. Điều này dẫn đến $gcd(a, b) = gcd(b, a - b)$.
+Do vậy với ba số $a$, $b$, $a - b$, nếu một số $d$ bất kỳ là ước của một trong ba số trên thì sẽ là ước của hai số còn lại, tức là $ƯC(a, b) = ƯC(b, a - b)$. Điều này dẫn đến $gcd(a, b) = gcd(b, a - b)$.
 
 Phép tính $a - b$ sau khi thực hiện $\lfloor \frac{a}{b} \rfloor$ lần thì sẽ thoả mãn $a \leq b$.  Số $a$ sau khi trừ đi $\lfloor \frac{a}{b} \rfloor$ lần $b$ trở thành $a - b\lfloor \frac{a}{b} \rfloor = a \text{ mod } b$. 
 
@@ -99,7 +99,7 @@ Các số $x, y$ thoả mãn đẳng thức trên luôn tồn tại theo bổ đ
 :::spoiler **Chứng minh**
 Rõ ràng, luôn tồn tại các giá trị $x, y$ để $ax + by > 0$. Gọi $d'$ là số nguyên dương nhỏ nhất thoả mãn $d' = ax' + by'$ (với $x', y'$ là các số nguyên). Ta chứng minh rằng $d'$ là ƯCLN của $a$ và $b$.
 
-Đặt $a = d'q + r &(0 \leq r < d')\\
+Đặt $a = d'q + r \space(0 \leq r < d')\\
 \Rightarrow r = a - qd'\\
 \Rightarrow r = a - q(ax' + by')\\
 \Rightarrow r = a(1 - qx') + b(-qy')$
@@ -128,9 +128,9 @@ Khi thực hiện thuật toán Euclid (không mở rộng) để tìm $d$, sau 
 
 Từ bộ $(a, b) = (d, 0)$ và $(x, y) = (1, 0)$ , ta truy lại giá trị $(a, b)$ ở bước trước và thay đổi các hệ số $x, y$ để đẳng thức $d = ax + by$ đúng trong bước này.
 
-Giả sử tại một bước ta có $(a, b) = (a_0, b_0)$. Đặt $a_0 = b_0q + r &(q, r \in \N, r < b_0) $. Ta thấy $q = \lfloor \frac{a_0}{b_0} \rfloor$ và $r = a_0 \text{ mod } b_0$. 
+Giả sử tại một bước ta có $(a, b) = (a_0, b_0)$. Đặt $a_0 = b_0q + r \space(q, r \in \mathbb{N} , r < b_0)$. Ta thấy $q = \lfloor \frac{a_0}{b_0} \rfloor$ và $r = a_0 \text{ mod } b_0$. 
 
-Lại giả sử sau khi áp dụng thuật toán Euclid mở rộng, ta được bộ $(a, b) = (b_0, r)$ và hệ số là $(x_1, y_1)$. Ta cần tìm các hệ số $(x_0, y_0)$ để:
+Lại giả sử trước bước đó sau khi áp dụng thuật toán Euclid mở rộng, ta được bộ $(a, b) = (b_0, r)$ và hệ số là $(x_1, y_1)$. Ta cần tìm các hệ số $(x_0, y_0)$ để:
 
 $a_0x_0 + b_0y_0 = d$
 
@@ -171,7 +171,7 @@ Thuật toán Euclid mở rộng thực tế chỉ là thêm một vài bước 
 ## Phương trình Diophantus tuyến tính hai ẩn
 Phương trình Diophantus (Diophantine function) tuyến tính hai ẩn có dạng như sau:
 
-$ax + by = c \space (a, b, c \in \Z)$ 
+$ax + by = c \space (a, b, c \in \mathbb{Z})$ 
 
 Phương trình trên có vô số nghiệm $(x, y)$ thực. Tuy nhiên, ta chỉ quan tâm đến các nghiệm nguyên của phương trình.
 
@@ -180,31 +180,31 @@ Phương trình trên có vô số nghiệm $(x, y)$ thực. Tuy nhiên, ta ch�
 *Bài tập áp dụng trực tiếp*: [CEQU](https://www.spoj.com/problems/CEQU/)
 
 ### Thuật toán tìm nghiệm
-Khi $a = b = 0$, phương trình có nghiệm $(x, y) = (k, h) \space(k, h \in \Z)$ nếu $c = 0$ và vô nghiệm nếu $c = 0$
+Khi $a = b = 0$, phương trình có nghiệm $(x, y) = (k, h) \space(k, h \in \mathbb{Z})$ nếu $c = 0$ và vô nghiệm nếu $c = 0$
 
-Khi $a \neq 0, b = 0$ phương trình có nghiệm $(x, y) = (\frac{c}{a}, k) \space(k \in \Z)$ nếu $a | c$ và vô nghiệm nếu $a \nmid c$. Tương tự khi $a = 0, b \neq 0$.
+Khi $a \neq 0, b = 0$ phương trình có nghiệm $(x, y) = (\frac{c}{a}, k) \space(k \in \mathbb{Z})$ nếu $a | c$ và vô nghiệm nếu $a \nmid c$. Tương tự khi $a = 0, b \neq 0$.
 
 Bây giờ ta chỉ xét các trường hợp $a \neq 0, b \neq 0$.
 
-:::spoiler **Tìm nghiệm số học**
+:::spoiler **Tìm nghiệm tổng quát bằng phương pháp số học**
 Từ $ax + by = c$ ta rút ra:
 
-$ax \equiv c (\text{mod } b)$
+$ax \equiv c \space(\text{mod } b)$
 
 Vế trái và modulo của đồng dư thức trên cùng chia hết cho $d = gcd(a, b)$. Do vậy, $d | c$. Nếu điều ngược lại xảy ra, phương trình vô nghiệm.
 
 Chia hai vế và modulo của đồng dư thức cho $d$ được:
 
-$\frac{a}{d} \times x \equiv \frac{c}{d} (\text{mod } \frac{b}{d})$
+$\frac{a}{d} \times x \equiv \frac{c}{d} \space(\text{mod } \frac{b}{d})$
 
 Vì $(\frac{a}{d}, \frac{b}{d}) = 1$ nên tồn tại nghịch đảo modulo $\frac{b}{d}$ của $\frac{a}{d}$. Nhân hai vế của đồng dư thức với giá trị này được:
 
-$x \equiv \frac{c}{d} \times (\frac{a}{d}) ^{-1} (\text{mod } \frac{b}{d})$ 
+$x \equiv \frac{c}{d} \times (\frac{a}{d}) ^{-1} \space(\text{mod } \frac{b}{d})$ 
 
 Do đó họ các nghiệm của phương trình là:
 
 $\begin{cases}
-	x = \frac{b}{d} \times k + \frac{c}{d} \times \alpha &(k \in \Z, \frac{a}{d} \times \alpha \equiv 1 (\text{mod } \frac{b}{d})) \\
+	x = \frac{b}{d} \times k + \frac{c}{d} \times \gamma &(k, \gamma \in \mathbb{Z}, \frac{a}{d} \times \gamma \equiv 1 \space(\text{mod } \frac{b}{d})) \\
 	y = \frac{c - ax}{b}
 \end{cases}$
 :::
@@ -215,13 +215,13 @@ Giả sử $a, b$ là các số dương. Đặt $d = gcd(a, b)$.
 
 Sử dụng thuật toán Euclid mở rộng, ta có:
 
-$ax' + by' = d \space(x', y' \in \Z)$
+$ax' + by' = d \space(x', y' \in \mathbb{Z})$
 
 Nhân hai vế của phương trình với $\frac{c}{d}$ được:
 
 $a(x' \times \frac{c}{d}) + b(y' \times \frac{c}{d}) = c$
 
-Do đó phương trình có nghiệm: 
+Suy ra phương trình có nghiệm: 
 
 $\begin{cases}
 	x_0 = x' \times \frac{c}{d}  \\
@@ -233,12 +233,12 @@ Trường hợp $a, b$ không dương, ta thay đổi dấu của $x, y$ để t
 Thay nghiệm $(x_0, y_0)$ trở lại phương trình, ta được:
 
 $ax_0 + by_0 = c\\
-\Rightarrow a(x_0 + k\times\frac{b}{d}) + b(y_0 - k\times\frac{a}{d}) = c \space (k \in \Z)$
+\Rightarrow a(x_0 + k\times\frac{b}{d}) + b(y_0 - k\times\frac{a}{d}) = c \space (k \in \mathbb{Z})$
 
 Từ đẳng thức này ta kết luận các nghiệm của phương trình có dạng:
 
 $\begin{cases}
-	x = x_0 + k \times \frac{b}{d} &(k \in \Z)\\
+	x = x_0 + k \times \frac{b}{d} &(k \in \mathbb{Z})\\
 	y = y_0 - k \times \frac{a}{d}
 \end{cases}$
 
@@ -298,7 +298,7 @@ Các trường hợp có $a = 0$ hoặc $b = 0$ là tầm thường. Ta chỉ x�
 Ở phần trước, ta đã có công thức nghiệm tổng quát của các phương trình Diophantus từ một nghiệm bất kỳ:
 
 $\begin{cases}
-	x = x_0 + k \times \frac{b}{d} &(k \in \Z)\\
+	x = x_0 + k \times \frac{b}{d} &(k \in \mathbb{Z})\\
 	y = y_0 - k \times \frac{a}{d}
 \end{cases}$
 
@@ -307,6 +307,8 @@ Dễ thấy các nghiệm của bài toán lúc này chỉ phụ thuộc vào $k
 Nếu bài toán yêu cầu liệt kê chi tiết các nghiệm này, ta cũng chỉ cần tăng $k$ lên dần dần trong khoảng thoả mãn.
 
 #### Tìm nghiệm có tổng dương nhỏ nhất
+Bài toán này yêu cầu chúng ta tìm nghiệm $(x, y)$ có $x + y$ nhỏ nhất.
+
 Cộng từng vế của biểu thức nghiệm $x$ và $y$ theo $k$ được:
 
 $x + y = x_0 + y_0 + k\times\frac{b - a}{d}$
@@ -316,7 +318,7 @@ Dễ thấy nghiệm nhỏ nhất khi $k\times\frac{b - a}{d}$ nhỏ nhất. Tu�
 *Bài tập áp dụng*: [Euclid Problem](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=1045). Ở bài này $c = d$.
 
 ## Nghịch đảo modulo
-Số tự nhiên $\alpha$ được gọi là **nghịch đảo modulo** theo modulo $m$ của một số tự nhiên $a$ nếu $a\alpha \equiv 1 \space(\text{mod } m)$. Ký hiệu là $a^{-1}$
+Số tự nhiên $\gamma$ được gọi là **nghịch đảo modulo** theo modulo $m$ của một số tự nhiên $a$ nếu $a\gamma \equiv 1 \space(\text{mod } m)$. Ký hiệu là $a^{-1} \space(\text{mod } m)$.
 
 Ví dụ: $3 = 7^{-1} \space(\text{mod } 10)$
 
@@ -331,7 +333,7 @@ $ax_0 + by_0 = 1\\
 
 Ta thấy nghiệm $x$ của phương trình là nghịch đảo modulo $b$ của $a$. Qua đó ta cũng thấy, nghịch đảo modulo chỉ tồn tại khi $(a, b) = 1$.
 
-Nghịch đảo modulo thường được sử dụng trong những bài toán chia số lớn lấy phần dư, điển hình là các bài toán tính tổ hợp. Khi modulo $M$ là số nguyên tố, để tiện lợi ta thường dùng $x^{-1} = x^{M - 2} \space(\text{mod } M)$. Ta có thể chứng minh điều này bằng cách áp dụng định lý Fermat nhỏ. Còn nếu $M$ không nguyên tố, ta lại áp dụng thuật toán Euclid mở rộng để tìm nghịch đảo modulo.
+Nghịch đảo modulo thường được sử dụng trong những bài toán chia số lớn lấy phần dư, điển hình là các bài toán tính tổ hợp. Khi modulo $M$ là số nguyên tố, để tiện lợi ta thường dùng $x^{-1} = x^{M - 2} \space(\text{mod } M)$. Ta có thể chứng minh điều này bằng cách suy ra từ định lý Fermat nhỏ. Còn nếu $M$ không nguyên tố, ta lại áp dụng thuật toán Euclid mở rộng để tìm nghịch đảo modulo qua phương trình $a\gamma + My = 1$.
 
 ## Bài tập áp dụng
 - [UVA - Gift Dilemma](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=4628)
