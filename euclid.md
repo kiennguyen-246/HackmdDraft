@@ -175,6 +175,10 @@ $ax + by = c \space (a, b, c \in \Z)$
 
 Phương trình trên có vô số nghiệm $(x, y)$ thực. Tuy nhiên, ta chỉ quan tâm đến các nghiệm nguyên của phương trình.
 
+Để cho ngắn gọn, bài viết sẽ sử dụng cụm từ "phương trình Diophantus" để chỉ phương trình Diophantus tuyến tính hai ẩn.
+
+*Bài tập áp dụng trực tiếp*: [CEQU](https://www.spoj.com/problems/CEQU/)
+
 ### Thuật toán tìm nghiệm
 Khi $a = b = 0$, phương trình có nghiệm $(x, y) = (k, h) \space(k, h \in \Z)$ nếu $c = 0$ và vô nghiệm nếu $c = 0$
 
@@ -238,11 +242,106 @@ $\begin{cases}
 	y = y_0 - k \times \frac{a}{d}
 \end{cases}$
 
-Chốt lại, để tìm nghiệm của một phương trình Diophantus tuyến tính 2 ẩn, ta tìm các hệ số $x', y'$ từ thuật toán Euclid mở rộng, rồi từ các hệ số này áp dụng vào các công thức trên để tính ra kết quả.
+Chốt lại, để tìm nghiệm của một phương trình Diophantus, ta tìm các hệ số $x', y'$ từ thuật toán Euclid mở rộng, rồi từ các hệ số này áp dụng vào các công thức trên để tính ra kết quả.
 
 ### Cài đặt
 Đoạn chương trình sau tìm **một** nghiệm nguyên của phương trình $ax + by = c$, với $a, b \neq 0$:
 
 ``` cpp=
+const pair <int, int> INVALID_ROOT = {INT_MAX, INT_MAX};
 
+//Hàm trả về ƯCLN của a và b, biến đổi x, y thoả mãn ax + by = gcd(a, b)
+int extEuclid(int a, int b, int &x, int&y)
+{
+    if (b == 0)
+    {
+        x = 1;
+        y = 0;
+        return a;
+    }
+    int q = a / b;
+    int r = a - b * q;
+    int x1 = 0, y1 = 0;
+    int d = extEuclid(b, r, x1, y1);
+    x = y1;
+    y = x1 - q * y1;
+    return d;
+}
+
+//Tìm 1 nghiệm nguyên của phương trình ax + by + c = 0
+pair <int, int> diophantineSolve(int a, int b, int c)
+{
+    int x = 0, y = 0;
+    int d = extEuclid(a, b, x, y);
+    if (c % d != 0) return INVALID_ROOT;
+    x *= c / d;
+    y *= c / d;
+    if (a < 0) x = -x;
+    if (b < 0) y = -y;
+    return make_pair(x, y);
+}
 ```
+
+### Một số bài toán liên quan
+#### Đếm số nghiệm của phương trình Diophantus trong một khoảng cho trước
+*Bài tập áp dụng trực tiếp*: [SGU 106](https://codeforces.com/problemsets/acmsguru/problem/99999/106)
+
+**Tóm tắt đề bài**: Đếm số cặp số nguyên $x, y$ thoả mãn:
+$\begin{cases}
+	ax + by = c \\
+	x_1 \leq x \leq x_2\\
+	y_1 \leq y \leq y_2
+\end{cases}$
+
+Các trường hợp có $a = 0$ hoặc $b = 0$ là tầm thường. Ta chỉ xét $a \neq 0$ và $b \neq 0$.
+
+Ở phần trước, ta đã có công thức nghiệm tổng quát của các phương trình Diophantus từ một nghiệm bất kỳ:
+
+$\begin{cases}
+	x = x_0 + k \times \frac{b}{d} &(k \in \Z)\\
+	y = y_0 - k \times \frac{a}{d}
+\end{cases}$
+
+Dễ thấy các nghiệm của bài toán lúc này chỉ phụ thuộc vào $k$. Bài toán trở thành tìm $k$ sao cho $x$ và $y$ thoả mãn các điều kiện đã cho. Lúc này ta chỉ cần thay ngược biểu thức của $x$ và $y$ theo $k$ vào rồi suy ngược $k$ ra là xong, giống như những bài toán đếm số nghiệm của phương trình lượng giác trong một khoảng.
+
+Nếu bài toán yêu cầu liệt kê chi tiết các nghiệm này, ta cũng chỉ cần tăng $k$ lên dần dần trong khoảng thoả mãn.
+
+#### Tìm nghiệm có tổng dương nhỏ nhất
+Cộng từng vế của biểu thức nghiệm $x$ và $y$ theo $k$ được:
+
+$x + y = x_0 + y_0 + k\times\frac{b - a}{d}$
+
+Dễ thấy nghiệm nhỏ nhất khi $k\times\frac{b - a}{d}$ nhỏ nhất. Tuỳ thuộc vào dấu của $b - a$, ta chọn $k$ sao cho giá trị của biểu thức là cực tiểu.
+
+*Bài tập áp dụng*: [Euclid Problem](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=1045). Ở bài này $c = d$.
+
+## Nghịch đảo modulo
+Số tự nhiên $\alpha$ được gọi là **nghịch đảo modulo** theo modulo $m$ của một số tự nhiên $a$ nếu $a\alpha \equiv 1 \space(\text{mod } m)$. Ký hiệu là $a^{-1}$
+
+Ví dụ: $3 = 7^{-1} \space(\text{mod } 10)$
+
+Không phải số tự nhiên nào cũng có nghịch đảo modulo; chẳng hạn, không có nghịch đảo modulo $4$ của $2$.
+
+Xét phương trình Diophantus $ax + by = 1$. Khi phương trình có nghiệm $(x_0, y_0)$, ta có:
+
+$ax_0 + by_0 = 1\\
+\Rightarrow ax_0 = 1 - by_0\\
+\Rightarrow ax_0 \equiv 1 \space(\text{mod } b)\\
+\Rightarrow x_0 = a^{-1} \space(\text{mod } b)$
+
+Ta thấy nghiệm $x$ của phương trình là nghịch đảo modulo $b$ của $a$. Qua đó ta cũng thấy, nghịch đảo modulo chỉ tồn tại khi $(a, b) = 1$.
+
+Nghịch đảo modulo thường được sử dụng trong những bài toán chia số lớn lấy phần dư, điển hình là các bài toán tính tổ hợp. Khi modulo $M$ là số nguyên tố, để tiện lợi ta thường dùng $x^{-1} = x^{M - 2} \space(\text{mod } M)$. Ta có thể chứng minh điều này bằng cách áp dụng định lý Fermat nhỏ. Còn nếu $M$ không nguyên tố, ta lại áp dụng thuật toán Euclid mở rộng để tìm nghịch đảo modulo.
+
+## Bài tập áp dụng
+- [UVA - Gift Dilemma](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=4628)
+- [Codeforces - Ebony and Ivory](https://codeforces.com/contest/633/problem/A)
+- [Codechef - Get AC in one go](https://www.codechef.com/problems/COPR16G)
+- [VNOJ - VM 08 Bài 05 - Số nguyên](https://oj.vnoi.info/problem/integer7)
+
+## Tài liệu tham khảo
+- Một loạt các bài viết trong mục Fundamentals, [CP Algorithms](https://cp-algorithms.com/algebra/euclid-algorithm.html)
+- Wikipedia (phần chứng minh bổ đề Bézout)
+- GeeksforGeeks (phần chứng minh độ phức tạp thuật Euclid)
+- [Post trên VNOI Forum của anh Tăng Khải Hạnh](https://vnoi.info/library/82/419/)
+- Slide về chủ đề này của thầy Lê Minh Hoàng (chưa tìm được nguồn)
