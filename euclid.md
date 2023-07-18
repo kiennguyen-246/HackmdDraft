@@ -85,7 +85,7 @@ Cải tiến này không làm thay đổi độ phức tạp và cũng không l�
 - Để tính bội chung nhỏ nhất (BCNN) của hai số, ta dùng công thức: $lcm(a, b) = \frac{a \times b}{gcd(a, b)}$. Kể từ `C++17`, thư viện `numeric` cũng hỗ trợ cả hàm `lcm(a, b)` cho phép tính BCNN của hai số.
 
 ## Thuật toán Euclid mở rộng
-Với hai số tự nhiên $a$ và $b$, thuật toán này được sử dụng để viết $d = gcd(a, b)$ dưới dạng **tổ hợp tuyến tính**. Nói cách khác, thuật toán này sẽ tìm tất cả các bộ giá trị nguyên $(x, y)$ thoả mãn:
+Với hai số tự nhiên $a$ và $b$, thuật toán này được sử dụng để viết $d = gcd(a, b)$ dưới dạng **tổ hợp tuyến tính**. Nói cách khác, thuật toán này sẽ tìm một bộ giá trị nguyên $(x, y)$ thoả mãn:
 
 $ax + by = d$
 
@@ -147,3 +147,25 @@ Có $d = b_0x_1 + ry_1\\
 Liên tục cập nhật các hệ số $(x, y)$ theo công thức trên tới khi thu được $(a, b)$ như ban đầu, ta sẽ thu được kết quả.
 
 ### Cài đặt
+``` cpp=
+// Hàm trả về ƯCLN của a và b đồng thời thay đổi giá trị của x, y
+int extEuclid(int a, int b, int& x, int& y)
+{
+    if (b == 0)
+    {
+        x = 1;
+        y = 0;
+        return a;
+    }
+    int q = a / b;
+    int r = a - b * q;
+    int x1 = 0, y1 = 0;
+    int d = extEuclid(b, r, x1, y1);
+    x = y1;
+    y = x1 - q * y1;
+    return d;
+}
+```
+
+### Độ phức tạp
+Thuật toán Euclid mở rộng thực tế chỉ là thêm một vài bước tính toán vào thuật toán Euclid thường nên độ phức tạp vẫn là $O(log(min\{a, b\}))$.
