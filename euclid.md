@@ -3,13 +3,13 @@
 ## Mở đầu về Ước chung lớn nhất
 Đây là khái niệm tương đối quen thuộc với chúng ta.
 
-Cho hai số tự nhiên $a$ và $b$. Số nguyên dương $d$ lớn nhất thoả mãn $a \vdots d$ và $b \vdots d$ gọi là **ước chung lớn nhất** (GCD/ƯCLN) của $a$ và $b$. Kí hiệu là $gcd(a, b)$ ($ƯCLN(a, b)$ trong tiếng Việt) hoặc đơn giản hơn $(a, b)$.
+Cho hai số tự nhiên $a$ và $b$. Số nguyên dương $d$ lớn nhất thoả mãn $d | a$ và $d | b$ gọi là **ước chung lớn nhất** (GCD/ƯCLN) của $a$ và $b$. Kí hiệu là $gcd(a, b)$ ($ƯCLN(a, b)$ trong tiếng Việt) hoặc đơn giản hơn $(a, b)$.
 
 $gcd(a, b) = max\{d > 0 : (d | a) \text{ and } (d | b)\}$
 
 Về mặt toán học, với $k \neq 0$ thì $gcd(0, k) = k$, và $gcd(0, 0)$ không xác định. Tuy nhiên, để lập trình tiện lợi ta vẫn quy ước $gcd(0, 0) = 0$.
 
-Có một vài cách để tìm ƯCLN của hai số $a$ và $b$. Cách đơn giản nhất là ... duyệt từng số tự nhiên $d$ một đến $min\{a, b\}$ để kiểm tra điều kiện $a \vdots d$ và $b \vdots d$. Ngoài ra, trong toán học, ta cũng sử dụng phương pháp phân tích thành thừa số nguyên tố để tìm ƯCLN. Phương pháp này không hiệu quả lắm khi lập trình. Thay vào đó, chúng ta sẽ sử dụng thuật toán Euclid.
+Có một vài cách để tìm ƯCLN của hai số $a$ và $b$. Cách đơn giản nhất là ... duyệt từng số tự nhiên $d$ một đến $min\{a, b\}$ để kiểm tra điều kiện $d | a$ và $d | b$. Ngoài ra, trong toán học, ta cũng sử dụng phương pháp phân tích thành thừa số nguyên tố để tìm ƯCLN. Phương pháp này không hiệu quả lắm khi lập trình. Thay vào đó, chúng ta sẽ sử dụng thuật toán Euclid.
 
 ## Thuật toán Euclid
 Thuật toán này được trình bày trong tác phẩm "Cơ sở" (Elements) của Euclid vào khoảng năm 300 TCN, nhưng cũng có thể đã từng xuất hiện trước đó.
@@ -101,7 +101,7 @@ Các số $x, y$ thoả mãn đẳng thức trên luôn tồn tại theo bổ đ
 :::spoiler **Chứng minh**
 Rõ ràng, luôn tồn tại các giá trị $x, y$ để $ax + by > 0$. Gọi $d'$ là số nguyên dương nhỏ nhất thoả mãn $d' = ax' + by'$ (với $x', y'$ là các số nguyên). Ta chứng minh rằng $d'$ là ƯCLN của $a$ và $b$.
 
-Đặt $a = d'q + r (0 \leq r < d')\\
+Đặt $a = d'q + r &(0 \leq r < d')\\
 \Rightarrow r = a - qd'\\
 \Rightarrow r = a - q(ax' + by')\\
 \Rightarrow r = a(1 - qx') + b(-qy')$
@@ -130,7 +130,7 @@ Khi thực hiện thuật toán Euclid (không mở rộng) để tìm $d$, sau 
 
 Từ bộ $(a, b) = (d, 0)$ và $(x, y) = (1, 0)$ , ta truy lại giá trị $(a, b)$ ở bước trước và thay đổi các hệ số $x, y$ để đẳng thức $d = ax + by$ đúng trong bước này.
 
-Giả sử tại một bước ta có $(a, b) = (a_0, b_0)$. Đặt $a_0 = b_0q + r (q, r \in \N, r < b_0) $. Ta thấy $q = \lfloor \frac{a_0}{b_0} \rfloor$ và $r = a_0 \text{ mod } b_0$. 
+Giả sử tại một bước ta có $(a, b) = (a_0, b_0)$. Đặt $a_0 = b_0q + r &(q, r \in \N, r < b_0) $. Ta thấy $q = \lfloor \frac{a_0}{b_0} \rfloor$ và $r = a_0 \text{ mod } b_0$. 
 
 Lại giả sử sau khi áp dụng thuật toán Euclid mở rộng, ta được bộ $(a, b) = (b_0, r)$ và hệ số là $(x_1, y_1)$. Ta cần tìm các hệ số $(x_0, y_0)$ để:
 
@@ -169,3 +169,82 @@ int extEuclid(int a, int b, int& x, int& y)
 
 ### Độ phức tạp
 Thuật toán Euclid mở rộng thực tế chỉ là thêm một vài bước tính toán vào thuật toán Euclid thường nên độ phức tạp vẫn là $O(log(min\{a, b\}))$.
+
+## Phương trình Diophantus tuyến tính hai ẩn
+Phương trình Diophantus (Diophantine function) tuyến tính hai ẩn có dạng như sau:
+
+$ax + by = c &(a, b, c \in \Z)$ 
+
+Phương trình trên có vô số nghiệm $(x, y)$ thực. Tuy nhiên, ta chỉ quan tâm đến các nghiệm nguyên của phương trình.
+
+### Thuật toán tìm nghiệm
+Khi $a = b = 0$, phương trình có nghiệm $(x, y) = (k, h) &(k, h \in \Z)$ nếu $c = 0$ và vô nghiệm nếu $c = 0$
+
+Khi $a \neq 0, b = 0$ phương trình có nghiệm $(x, y) = (c / a, k) &(k \in \Z)$ nếu $a | c$ và vô nghiệm nếu $a \nmid c$. Tương tự khi $a = 0, b \neq 0$.
+
+Bây giờ ta chỉ xét các trường hợp $a \neq 0, b \neq 0$.
+
+:::spoiler **Tìm nghiệm số học**
+Từ $ax + by = c$ ta rút ra:
+
+$ax \equiv c (\text{mod } b)$
+
+Vế trái và modulo của đồng dư thức trên cùng chia hết cho $d = gcd(a, b)$. Do vậy, $d | c$. Nếu điều ngược lại xảy ra, phương trình vô nghiệm.
+
+Chia hai vế và modulo của đồng dư thức cho $d$ được:
+
+$\frac{a}{d} \times x \equiv \frac{c}{d} (\text{mod } \frac{b}{d})$
+
+Vì $(\frac{a}{d}, \frac{b}{d}) = 1$ nên tồn tại nghịch đảo modulo $\frac{b}{d}$ của $\frac{a}{d}$. Nhân hai vế của đồng dư thức với giá trị này được:
+
+$x \equiv \frac{c}{d} \times (\frac{a}{d}) ^{-1} (\text{mod } \frac{b}{d})$ 
+
+Do đó họ các nghiệm của phương trình là:
+
+$\begin{cases}
+	x = \frac{b}{d} \times k + \frac{c}{d} \times \alpha &(k \in \Z, \frac{a}{d} \times \alpha \equiv 1 (\text{mod } \frac{b}{d})) \\
+	y = \frac{c - ax}{b}
+\end{cases}$
+:::
+
+Ta đã biết phương trình chỉ có nghiệm nếu $gcd(|a|, |b|) | c$. Nếu điều kiện này không thoả mãn, ta có thể kết luận phương trình vô nghiệm.
+
+Giả sử $a, b$ là các số dương. Đặt $d = gcd(a, b)$. 
+
+Sử dụng thuật toán Euclid mở rộng, ta có:
+
+$ax' + by' = d &(x', y' \in \Z)$
+
+Nhân hai vế của phương trình với $\frac{c}{d}$ được:
+
+$a(x' \times \frac{c}{d}) + b(y' \times \frac{c}{d}) = c$
+
+Do đó phương trình có nghiệm: 
+
+$\begin{cases}
+	x_0 = x' \times \frac{c}{d}  \\
+	y_0 = y' \times \frac{c}{d}
+\end{cases}$
+
+Trường hợp $a, b$ không dương, ta thay đổi dấu của $x, y$ để thoả mãn đẳng thức.
+
+Thay nghiệm $(x_0, y_0)$ trở lại phương trình, ta được:
+
+$ax_0 + by_0 = c\\
+\Rightarrow a(x_0 + k\times\frac{b}{d}) + b(y_0 - k\times\frac{a}{d}) = c &(k \in \Z)$
+
+Từ đẳng thức này ta kết luận các nghiệm của phương trình có dạng:
+
+$\begin{cases}
+	x = x_0 + k \times \frac{b}{d} &(k \in \Z)\\
+	y = y_0 - k \times \frac{a}{d}
+\end{cases}$
+
+Chốt lại, để tìm nghiệm của một phương trình Diophantus tuyến tính 2 ẩn, ta tìm các hệ số $x', y'$ từ thuật toán Euclid mở rộng, rồi từ các hệ số này áp dụng vào các công thức trên để tính ra kết quả.
+
+### Cài đặt
+Đoạn chương trình sau tìm **một** nghiệm nguyên của phương trình $ax + by = c$, với $a, b \neq 0$:
+
+``` cpp=
+
+```
