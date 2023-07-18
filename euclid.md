@@ -1,5 +1,3 @@
-# Thuật toán Euclid
-
 ## Mở đầu về Ước chung lớn nhất
 Đây là khái niệm tương đối quen thuộc với chúng ta.
 
@@ -35,8 +33,8 @@ Vậy $gcd(a, b) = gcd(b, a \text{ mod } b)$ (đpcm).
 ``` cpp=
 int gcd(int a, int b)
 {
-	if (b == 0) return a;
-	return gcd(b, a % b);
+    if (b == 0) return a;
+    return gcd(b, a % b);
 }
 ```
 
@@ -44,7 +42,7 @@ Hoặc ngắn hơn:
 ``` cpp=
 int gcd(int a, int b)
 {
-	return (b ? gcd(b, a % b) : a);
+    return (b ? gcd(b, a % b) : a);
 }
 ```
 
@@ -173,14 +171,14 @@ Thuật toán Euclid mở rộng thực tế chỉ là thêm một vài bước 
 ## Phương trình Diophantus tuyến tính hai ẩn
 Phương trình Diophantus (Diophantine function) tuyến tính hai ẩn có dạng như sau:
 
-$ax + by = c &(a, b, c \in \Z)$ 
+$ax + by = c \space (a, b, c \in \Z)$ 
 
 Phương trình trên có vô số nghiệm $(x, y)$ thực. Tuy nhiên, ta chỉ quan tâm đến các nghiệm nguyên của phương trình.
 
 ### Thuật toán tìm nghiệm
-Khi $a = b = 0$, phương trình có nghiệm $(x, y) = (k, h) &(k, h \in \Z)$ nếu $c = 0$ và vô nghiệm nếu $c = 0$
+Khi $a = b = 0$, phương trình có nghiệm $(x, y) = (k, h) \space(k, h \in \Z)$ nếu $c = 0$ và vô nghiệm nếu $c = 0$
 
-Khi $a \neq 0, b = 0$ phương trình có nghiệm $(x, y) = (c / a, k) &(k \in \Z)$ nếu $a | c$ và vô nghiệm nếu $a \nmid c$. Tương tự khi $a = 0, b \neq 0$.
+Khi $a \neq 0, b = 0$ phương trình có nghiệm $(x, y) = (\frac{c}{a}, k) \space(k \in \Z)$ nếu $a | c$ và vô nghiệm nếu $a \nmid c$. Tương tự khi $a = 0, b \neq 0$.
 
 Bây giờ ta chỉ xét các trường hợp $a \neq 0, b \neq 0$.
 
@@ -213,7 +211,7 @@ Giả sử $a, b$ là các số dương. Đặt $d = gcd(a, b)$.
 
 Sử dụng thuật toán Euclid mở rộng, ta có:
 
-$ax' + by' = d &(x', y' \in \Z)$
+$ax' + by' = d \space(x', y' \in \Z)$
 
 Nhân hai vế của phương trình với $\frac{c}{d}$ được:
 
@@ -231,7 +229,7 @@ Trường hợp $a, b$ không dương, ta thay đổi dấu của $x, y$ để t
 Thay nghiệm $(x_0, y_0)$ trở lại phương trình, ta được:
 
 $ax_0 + by_0 = c\\
-\Rightarrow a(x_0 + k\times\frac{b}{d}) + b(y_0 - k\times\frac{a}{d}) = c &(k \in \Z)$
+\Rightarrow a(x_0 + k\times\frac{b}{d}) + b(y_0 - k\times\frac{a}{d}) = c \space (k \in \Z)$
 
 Từ đẳng thức này ta kết luận các nghiệm của phương trình có dạng:
 
