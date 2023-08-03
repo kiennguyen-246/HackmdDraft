@@ -2,6 +2,7 @@
 # Thuật toán Euclid
 
 ## Mở đầu
+
 ### Các ký hiệu toán học sử dụng trong bài viết
 - Cho hai số nguyên $a$ và $b$. Nếu tồn tại số nguyên $q$ sao cho $a = bq$ thì ta nói $a$ chia hết cho $b$ (ký hiệu $a\space\vdots\space b$) hoặc $b$ chia hết $a$ (ký hiệu $b\space|\space a$).
 - Cho ba số nguyên $a$, $b$ và $m$. Nếu tồn tại một số nguyên $r$ sao cho $a = mq_1 + r$ và $b = mq_2 + r$ với $q_1, q_2$ là các số nguyên thì ta nói $a$ đồng dư với $b$ theo modulo $m$. Ký hiệu là $a \equiv b \pmod m$.
@@ -57,12 +58,38 @@ int gcd(int a, int b)
 ```
 
 ### Độ phức tạp
-Người ta chứng minh được rằng thuật toán Euclid có độ phức tạp trung bình là $O(\text{log}(\text{min}\{a, b\}))$. Bạn có thể tham khảo chứng minh chi tiết tại [GeeksforGeeks](https://www.geeksforgeeks.org/time-complexity-of-euclidean-algorithm/).
+**Định lý Lamé**: Thuật toán Euclid cần thực hiện ít nhất $5\text{log}_{10}(\text{min}\{u, v\})$ lần chia lấy dư.
+:::spoiler Chứng minh
+Không mất tính tổng quát, giả sử $u > v$. Liên tiếp áp dụng thuật toán Euclid với các số $u, v$, ta thu được các số $u$, $v$ bị biến đổi thành $q_1, ..., q_n$ và $v_2, ..., v_n$. Ta quy ước thêm $v_0 = u, v_1 = v, v_{n + 1} = 0$. Ta có: 
+$$v_{i - 1} = q_iv_i + v_{i + 1}$$
+với $i \in \mathbb{N}, i \leq n$. Đồng thời cũng dễ thấy $v_i > v_{i + 1}$ với mọi $i$ thuộc khoảng trên.
+
+Ta thấy $n$ cũng là số lần chạy đệ quy để thuật toán chạy ra kết quả.
+
+Sử dụng phương pháp chứng minh quy nạp, ta chứng minh được:
+$\\ v_{n - i - 1} = q_{n - i}v_{n - i} + v_{n - i + 1} \\
+\geq v_{n - 1} + v_{n - i + 1} \\
+\geq F_{i + 2} + F_{i + 1} \\
+= F_{i + 3} \space (1)\\$
+với $F_i$ là số Fibonacci thứ $i$.
+
+Đặt $\phi = \frac{1 + \sqrt{5}}{2}$ (Giá trị này được gọi là tỷ lệ vàng). Tiếp tục sử dụng phương pháp chứng minh quy nạp (chú ý rằng $\phi^2 = \phi + 1$), ta chứng minh được:
+$$F_i \geq \phi^{i - 2}\space (2)$$
+
+Kết hợp $(1)$ và $(2)$, ta có:
+$v = v_1 \geq \phi^{n - 1} \\
+\Rightarrow \text{log}_{10}v \geq (n - 1)\text{log}_{10}\phi \\
+\Rightarrow n - 1 \leq \frac{\text{log}_{10}v}{\text{log}_{10}\phi} \\
+\Rightarrow n - 1 < 5\text{log}_{10}v \\
+\Rightarrow n \leq 5\text{log}_{10}v$ (đpcm)
+:::
+
+Với giá trị trên, có thể dễ dàng biến đổi để suy ra độ phức tạp của thuật toán Euclid là $O(\text{log}(\text{min}\{u, v\}))$
 
 Thuật toán chạy chậm nhất khi $a = F_n$, $b = F_{n - 1}$, với $F_i$ là số Fibonacci thứ $i$. Khi đó thuật toán cần thực hiện $n - 2$ lần đệ quy.
 
 ### Cải tiến
-So với các phép toán khác, phép lấy phần dư (%) chậm hơn một chút dù vẫn có độ phức tạp là $O(1)$. Chúng ta có thể xây dựng một cách cài đặt khác không sử dụng phép toán này.
+So với các phép toán khác, phép lấy phần dư (`%`) chậm hơn một chút dù vẫn có độ phức tạp là $O(1)$. Chúng ta có thể xây dựng một cách cài đặt khác không sử dụng phép toán này.
 
 Ta có một số tính chất sau: 
 - $\text{gcd}(2k, 2h) = 2\text{gcd}(k, h)$
@@ -368,7 +395,7 @@ Khi modulo $M$ là số nguyên tố, để tiện lợi ta thường dùng đ�
 
 ## Tài liệu tham khảo
 - Một loạt các bài viết trong mục Fundamentals, [CP Algorithms](https://cp-algorithms.com/algebra/euclid-algorithm.html)
-- Wikipedia (phần chứng minh bổ đề Bézout)
+- Wikipedia (phần chứng minh định lý Lamé và bổ đề Bézout)
 - VNOI Wiki, [Nghịch đảo Modulo](https://vnoi.info/wiki/algo/math/modular-inverse.md) (bài viết cũ)
 - [Post trên VNOI Forum của anh Tăng Khải Hạnh](https://vnoi.info/library/82/419/)
 - Slide về chủ đề này của thầy Lê Minh Hoàng (chưa tìm được nguồn)
