@@ -1,13 +1,23 @@
-## Mở đầu về Ước chung lớn nhất
+[TOC]
+# Thuật toán Euclid
+
+## Mở đầu
+### Các ký hiệu toán học sử dụng trong bài viết
+- Cho hai số nguyên $a$ và $b$. Nếu tồn tại số nguyên $q$ sao cho $a = bq$ thì ta nói $a$ chia hết cho $b$ (ký hiệu $a\space\vdots\space b$) hoặc $b$ chia hết $a$ (ký hiệu $b\space|\space a$).
+- Cho ba số nguyên $a$, $b$ và $m$. Nếu tồn tại một số nguyên $r$ sao cho $a = mq_1 + r$ và $b = mq_2 + r$ với $q_1, q_2$ là các số nguyên thì ta nói $a$ đồng dư với $b$ theo modulo $m$. Ký hiệu là $a \equiv b \pmod m$.
+
+### Ước chung lớn nhất
 Đây là khái niệm tương đối quen thuộc với chúng ta.
 
-Cho hai số tự nhiên $a$ và $b$. Số nguyên dương $d$ lớn nhất thoả mãn $d | a$ và $d | b$ gọi là **ước chung lớn nhất** (greatest common divisor - GCD) của $a$ và $b$. Kí hiệu là $\text{gcd}(a, b)$ ($\text{ƯCLN}(a, b)$ trong tiếng Việt) hoặc đơn giản hơn $(a, b)$.
+Cho hai số tự nhiên $a$ và $b$. Số nguyên dương $d$ lớn nhất thoả mãn $d\space|\space a$ và $d\space|\space b$ gọi là **ước chung lớn nhất (greatest common divisor - GCD)** của $a$ và $b$. Kí hiệu là $\text{gcd}(a, b)$ ($\text{ƯCLN}(a, b)$ trong tiếng Việt) hoặc đơn giản hơn $(a, b)$.
 
-$$\text{gcd}(a, b) = \text{max}\{d \in \mathbb{N}^* : (d | a) \text{ and } (d | b)\}$$
+$$\text{gcd}(a, b) = \text{max}\{d \in \mathbb{N}^* : (d\space|\space a) \text{ và } (d\space|\space b)\}$$
 
 Về mặt toán học, với $k \neq 0$ thì $\text{gcd}(0, k) = k$, và $\text{gcd}(0, 0)$ không xác định. Tuy nhiên, để lập trình tiện lợi ta quy ước $\text{gcd}(0, 0) = 0$.
 
-Có một vài cách để tìm ƯCLN của hai số $a$ và $b$. Cách đơn giản nhất là ... duyệt từng số tự nhiên $d$ một đến $\text{min}\{a, b\}$ để kiểm tra điều kiện $d | a$ và $d | b$. Ngoài ra, trong toán học, ta cũng sử dụng phương pháp phân tích thành thừa số nguyên tố để tìm ƯCLN. Phương pháp này không hiệu quả lắm khi lập trình. Thay vào đó, chúng ta sẽ sử dụng thuật toán Euclid.
+Định nghĩa ƯCLN cũng có thể mở rộng cho số nguyên. Khi đó $\text{gcd}(a, b) = \text{gcd}(|a|, |b|)$.
+
+Có một vài cách để tìm ƯCLN của hai số $a$ và $b$. Cách đơn giản nhất là ... duyệt từng số tự nhiên $d$ một đến $\text{min}\{a, b\}$ để kiểm tra điều kiện $d\space|\space a$ và $d\space|\space b$. Ngoài ra, trong toán học, ta cũng sử dụng phương pháp phân tích thành thừa số nguyên tố để tìm ƯCLN. Phương pháp này không hiệu quả lắm khi lập trình. Thay vào đó, chúng ta sẽ sử dụng thuật toán Euclid.
 
 ## Thuật toán Euclid
 Thuật toán này được trình bày trong tác phẩm "Cơ sở" (Elements) của Euclid vào khoảng năm 300 TCN, nhưng cũng có thể đã từng xuất hiện trước đó.
@@ -72,9 +82,14 @@ int gcd(int a, int b)
             swap(a, b);
         b -= a;
     } while (b);
+    
     return a << shift;
 }
 ```
+Đoạn code trên thực hiện những công việc sau:
+- Chia cả hai số $a$ và $b$ cho $shift$ là luỹ thừa của $2$, để hai số đều lẻ (Hàm `__builtin_ctz(k)` đếm số bit $0$ tận cùng của $k$).
+- Lúc này, ít nhất một trong hai số là lẻ. Liên tục chia số chẵn cho $2$ để nó trở thành số lẻ, sau đó áp dụng $(a, b) = (b, a - b)$. Lặp lại bước trên tới khi một trong hai số là $0$.
+- Nhân kết quả (tạm gọi là $ans$) với $shift$, vì ta đã chia cả hai số này cho $shift$, vì rõ ràng $(shift, ans) = 1$.
 
 Cải tiến này không làm thay đổi độ phức tạp và cũng không làm cho chương trình chạy nhanh hơn nhiều lắm.
 
@@ -122,15 +137,15 @@ Vậy $d'$ là ƯCLN của $a$ và $b$. Bổ đề được chứng minh.
 Ứng dụng trực tiếp của thuật toán này là các phương trình Diophantus, sẽ được thảo luận ở phần sau.
 
 ### Mô tả thuật toán
-Gọi $d$ là ƯCLN của $a$ và $b$.
+Xét bài toán với hai số ban đầu là $a = A$ và $b = B$. Gọi $d$ là ƯCLN của $A$ và $B$.
 
-Khi thực hiện thuật toán Euclid (không mở rộng) để tìm $d$, sau khi biến đổi hoàn tất ta thu được $(a, b) = (d, 0)$. Lúc này ta có $d = d \times 1 + 0 \times 0$.
+Khi thực hiện thuật toán Euclid (không mở rộng) để tìm $d$, sau khi biến đổi hoàn tất ta thu được $a = d, b = 0$. Lúc này ta có $d = d \times 1 + 0 \times 0$, tức là $a = d, b = 0, x = 1, y = 0$.
 
-Từ bộ $(a, b) = (d, 0)$ và $(x, y) = (1, 0)$ , ta truy lại giá trị $(a, b)$ ở bước trước và thay đổi các hệ số $x, y$ để đẳng thức $d = ax + by$ đúng trong bước này.
+Từ các giá trị $a, b, x, y$ ở trên, ta truy lại các giá trị $a, b$ ở bước trước và thay đổi các hệ số $x, y$ để đẳng thức $d = ax + by$ đúng trong bước này.
 
-Giả sử tại một bước ta có $(a, b) = (a_0, b_0)$. Đặt $a_0 = b_0q + r \space(q, r \in \mathbb{N} , r < b_0)$. Ta thấy $q = \left\lfloor \dfrac{a_0}{b_0} \right\rfloor$ và $r = a_0 \text{ mod } b_0$.
+Giả sử tại một bước ta có $a = a_0, b = b_0$. Đặt $a_0 = b_0q + r \space(q, r \in \mathbb{N} , r < b_0)$. Ta thấy $q = \left\lfloor \dfrac{a_0}{b_0} \right\rfloor$ và $r = a_0 \text{ mod } b_0$.
 
-Lại giả sử trước bước đó sau khi áp dụng thuật toán Euclid mở rộng, ta được bộ $(a, b) = (b_0, r)$ và hệ số là $(x_1, y_1)$. Ta cần tìm các hệ số $(x_0, y_0)$ để:
+Lại giả sử trước bước đó sau khi áp dụng thuật toán Euclid mở rộng, ta được bộ $a = b_0, b = r$ và các hệ số $x = x_1, y = y_1$ là . Ta cần tìm các hệ số $x_0, y_0$ để:
 
 $$a_0x_0 + b_0y_0 = d$$
 
@@ -142,7 +157,7 @@ Có $d = b_0x_1 + ry_1\\
 	y_0 = x_1 - qy_1 = x_1 - \left\lfloor \dfrac{a_0}{b_0} \right\rfloor y_1
 \end{cases}$
 
-Liên tục cập nhật các hệ số $(x, y)$ theo công thức trên tới khi thu được $(a, b)$ như ban đầu, ta sẽ thu được kết quả.
+Liên tục cập nhật các hệ số $x, y$ theo công thức trên tới khi thu được $a = A, b = B$ như ban đầu, ta sẽ thu được kết quả.
 
 ### Cài đặt
 ``` cpp=
@@ -180,18 +195,20 @@ Phương trình trên có vô số nghiệm $(x, y)$ thực (trừ khi $a = b = 
 *Bài tập áp dụng trực tiếp*: [CEQU](https://www.spoj.com/problems/CEQU/)
 
 ### Thuật toán tìm nghiệm
-Khi $a = b = 0$, phương trình có nghiệm $(x, y) = (k, h) \space(k, h \in \mathbb{Z})$ nếu $c = 0$ và vô nghiệm nếu $c = 0$
+Khi $a = b = 0$, phương trình có nghiệm $x = k, y = h \space(k, h \in \mathbb{Z})$ nếu $c = 0$ và vô nghiệm nếu $c = 0$
 
-Khi $a \neq 0, b = 0$ phương trình có nghiệm $(x, y) = (\frac{c}{a}, k) \space(k \in \mathbb{Z})$ nếu $a | c$ và vô nghiệm nếu $a \nmid c$. Tương tự khi $a = 0, b \neq 0$.
+Khi $a \neq 0, b = 0$ phương trình có nghiệm $x = \frac{c}{a}, y = k \space(k \in \mathbb{Z})$ nếu $a\space|\space c$ và vô nghiệm nếu $a \nmid c$. Tương tự khi $a = 0, b \neq 0$.
 
 Bây giờ ta chỉ xét các trường hợp $a \neq 0, b \neq 0$.
 
+#### Tìm nghiệm tổng quát bằng phương pháp số học
+**Lưu ý**: Phần dưới đây tương đối phức tạp và không thực sự liên quan tới thuật toán để giải bài này, tuy nhiên nó có thể giải thích được vì sao $\text{gcd}(a, b)\space|\space c$. Bạn đọc cân nhắc trước khi xem.
 :::spoiler **Tìm nghiệm tổng quát bằng phương pháp số học**
 Từ $ax + by = c$ ta rút ra:
 
 $$ax \equiv c \space(\text{mod } b)$$
 
-Vế trái và modulo của đồng dư thức trên cùng chia hết cho $d = \text{gcd}(a, b)$. Do vậy, $d | c$. Nếu điều ngược lại xảy ra, phương trình vô nghiệm.
+Vế trái và modulo của đồng dư thức trên cùng chia hết cho $d = \text{gcd}(a, b)$. Do vậy, $d\space|\space c$. Nếu điều ngược lại xảy ra, phương trình vô nghiệm.
 
 Chia hai vế và modulo của đồng dư thức cho $d$ được:
 
@@ -209,7 +226,8 @@ $$\begin{cases}
 \end{cases}$$
 :::
 
-Ta đã biết phương trình chỉ có nghiệm nếu $gcd(|a|, |b|) | c$. Nếu điều kiện này không thoả mãn, ta có thể kết luận phương trình vô nghiệm.
+#### Tìm nghiệm bằng thuật toán
+Ta đã biết phương trình chỉ có nghiệm nếu $\text{gcd}(a, b)\space|\space c$. Nếu điều kiện này không thoả mãn, ta kết luận phương trình vô nghiệm.
 
 Giả sử $a, b$ là các số dương. Đặt $d = \text{gcd}(a, b)$. 
 
@@ -230,7 +248,7 @@ $$\begin{cases}
 
 Trường hợp $a, b$ không dương, ta thay đổi dấu của $x, y$ để thoả mãn đẳng thức.
 
-Thay nghiệm $(x_0, y_0)$ trở lại phương trình, ta được:
+Thay nghiệm $x_0, y_0$ trở lại phương trình, ta được:
 
 $ax_0 + by_0 = c\\
 \Rightarrow a\left(x_0 + k\times\frac{b}{d}\right) + b\left(y_0 - k\times\frac{a}{d}\right) = c \space (k \in \mathbb{Z})$
@@ -307,7 +325,7 @@ Dễ thấy các nghiệm của bài toán lúc này chỉ phụ thuộc vào $k
 Nếu bài toán yêu cầu liệt kê chi tiết các nghiệm này, ta cũng chỉ cần tăng $k$ lên dần dần trong khoảng thoả mãn.
 
 #### Tìm nghiệm có tổng dương nhỏ nhất
-Bài toán này yêu cầu chúng ta tìm nghiệm $(x, y)$ có $x + y$ nhỏ nhất.
+Bài toán này yêu cầu chúng ta tìm nghiệm $x, y$ có $x + y$ dương nhỏ nhất.
 
 Cộng từng vế của biểu thức nghiệm $x$ và $y$ theo $k$ được:
 
@@ -337,6 +355,8 @@ Nghịch đảo modulo thường được sử dụng trong những bài toán c
 
 $$\text{C}^k_n = \frac{n!}{k!\times (n - k)!} \equiv n!\times (k!\times (n - k)!)^{-1} \pmod M$$
 
+(Lưu ý rằng công thức trên chỉ đúng nếu $k!\times (n - k)!$ nguyên tố cùng nhau với $M$ với mọi $k, n$ thoả mãn dữ liệu của đề)
+
 Khi modulo $M$ là số nguyên tố, để tiện lợi ta thường dùng định lý Fermat nhỏ để suy ra $x^{-1} \equiv x^{M - 2} \space(\text{mod } M)$ rồi dùng luỹ thừa nhanh để tính. Còn nếu $M$ không nguyên tố, ta lại áp dụng thuật toán Euclid mở rộng để tìm nghịch đảo modulo qua phương trình $a\gamma + My = 1$.
 
 ## Bài tập áp dụng
@@ -349,7 +369,6 @@ Khi modulo $M$ là số nguyên tố, để tiện lợi ta thường dùng đ�
 ## Tài liệu tham khảo
 - Một loạt các bài viết trong mục Fundamentals, [CP Algorithms](https://cp-algorithms.com/algebra/euclid-algorithm.html)
 - Wikipedia (phần chứng minh bổ đề Bézout)
-- GeeksforGeeks (phần chứng minh độ phức tạp thuật Euclid)
-- VNOI Wiki, [Nghịch đảo Modulo](https://vnoi.info/wiki/algo/math/modular-inverse.md)
+- VNOI Wiki, [Nghịch đảo Modulo](https://vnoi.info/wiki/algo/math/modular-inverse.md) (bài viết cũ)
 - [Post trên VNOI Forum của anh Tăng Khải Hạnh](https://vnoi.info/library/82/419/)
 - Slide về chủ đề này của thầy Lê Minh Hoàng (chưa tìm được nguồn)
