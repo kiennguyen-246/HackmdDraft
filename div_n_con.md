@@ -2,8 +2,6 @@
 
 [TOC]
 
-# Chia để trị
-
 ## Mở đầu
 
 **Chia để trị (Divide and conquer, D&C)** chỉ việc chia nhỏ bài toán thành các phần nhỏ có cùng dạng với nó, tới khi có thể giải được một cách dễ dàng (thường là có ngay kết quả), sau đó dùng các kết quả này kết hợp lại để giải được bài toán lớn. Các bước để giải một bài toán chia để trị bao gồm:
@@ -59,7 +57,7 @@ Tại mỗi nút của cây trên, nếu việc kết hợp kết quả các bà
 
 $$
 T(n) = \begin{cases}
-    a \times T(\frac{n}{b}) + f(n) &\text{khi } n >= k\\
+    a \times T(\frac{n}{b}) + f(n) &\text{khi } n \geq k\\
     O(1) &\text{khi } n < k
     \end{cases}
 $$
@@ -78,7 +76,7 @@ Bây giờ, ta lại xét giá trị $f(n)$. Giả sử $f(n)$ viết được d
     -   Nếu $q < -1$, ta có:
         $$T(n) = \Theta(n^{\text{log}_b a})$$
 -   Nếu $a < b^p$, tức là tức là việc kết hợp kết quả có độ phức tạp rất lớn so với giải các bài toán con:
-    -   Nếu $q >= 0$, ta có:
+    -   Nếu $q \geq 0$, ta có:
         $$T(n) = \Theta(n^p\text{log}_q n)$$
     -   Nếu $q < 0$, ta có:
         $$T(n) = \Theta(n^k)$$
@@ -86,7 +84,7 @@ Bây giờ, ta lại xét giá trị $f(n)$. Giả sử $f(n)$ viết được d
 Một số ví dụ:
 
 -   Thuật toán Tìm kiếm nhị phân (Binary search) mỗi lần chia bài toán thành 2 phần bằng nhau nhưng chỉ xét 1, không cần kết hợp kết quả sẽ có $T(n) = T(n / 2) + O(1)$. Thời gian chạy trung bình của thuật toán là $T(n) = \Theta(\text{log}n)$, ứng với $a = 1, b = 2, p = 0, q = 0$.
--   Thuật toán MergeSort chia đôi dãy hiện tại thành 2 phần bằng nhau, lấy cả 2 và phải xét lại cả 2 phần để lấy kết quả sẽ có độ phức tạp là $T(n) = 2T(n / 2) + O(n)$. Thời gian chạy trung bình của thuật toán là $T(n) = \Theta(n\text{log}n)$, ứng với $a = 2, b = 2, p = 1, q = 0$.
+-   Thuật toán MergeSort chia đôi dãy hiện tại thành 2 phần bằng nhau, lấy cả 2 và phải xét lại cả 2 phần để lấy kết quả sẽ có $T(n) = 2T(n / 2) + O(n)$. Thời gian chạy trung bình của thuật toán là $T(n) = \Theta(n\text{log}n)$, ứng với $a = 2, b = 2, p = 1, q = 0$ (Chi tiết về thuật MergeSort bạn đọc có thể đọc phần dưới).
 -   Một thuật toán chia để trị có $T(n) = 3T(n / 2) + \text{log}^2n$. Thời gian chạy trung bình của thuật toán là $T(n) = \Theta(n^{\text{log}_2 3})$, tương ứng với $a = 3, b = 2, p = 0, q = 2$.
 
 Định lý thợ là một công cụ hữu hiệu để xác định độ phức tạp của một thuật toán chia để trị. Chỉ cần xác định được số bài toán con, kích thước dữ liệu các bài toán con và độ phức tạp của việc kết hợp dữ liệu, ta dễ dàng tìm ra độ phức tạp chung của bài toán.
@@ -94,3 +92,50 @@ Một số ví dụ:
 ## Một số ví dụ áp dụng Chia để trị
 
 Các bài toán áp dụng Chia để trị chỉ có chung một phương pháp như đã nói ở trên. Khi sử dụng, thứ mà ta quan tâm chủ yếu là độ phức tạp; thông thường, chia để trị là công cụ tối ưu độ phức tạp khá hiệu quả.
+
+### MergeSort
+
+**Đề bài**: Sắp xếp một dãy gồm $n$ số nguyên $(n \leq 10^6)$.
+
+#### Phân tích thuật toán
+
+Đây là một thuật toán sắp xếp nổi tiếng và cũng hay được áp dụng (nếu không được phép sử dụng các thư viện có sẵn). Thuật toán này sử dụng phương pháp đệ quy quay lui. Tại mỗi vòng đệ quy, giả sử đang cần sắp xếp một đoạn $[l, r]$ ta chia dãy làm hai phần bằng nhau, $[l, mid]$ và $[mid + 1, r]$ với $mid = \left\lfloor \dfrac{l + r}{2} \right\rfloor$. Sau khi đã gọi đệ quy các đoạn con, ta tiến hành hợp nhất hai đoạn này. Việc hợp nhất hai đoạn đã sắp xếp được tiến hành bằng phương pháp hai con trỏ, có độ phức tạp là $O(n)$. Trong trường hợp một đoạn chỉ có một phần tử duy nhất, ta coi như nó đã được sắp xếp.
+
+![Minh hoạ MergeSort](https://i.imgur.com/aqQU9hE.png)
+
+#### Cài đặt
+
+```cpp=
+//Ghép hai đoạn [l1, r1], [l2, r2] thành một đoạn bắt đầu từ l1
+void merge(int a[], int l1, int r1, int l2, int r2)
+{
+    int cur = l2;
+    vector <int> newArr;
+    for (int i = l1; i <= r1; i++)
+    {
+        while (cur <= r2 && a[cur] < a[i])
+        {
+            newArr.push_back(a[cur]);
+            cur++;
+        }
+        newArr.push_back(a[i]);
+    }
+    for (int j = cur; j <= r2; j ++) newArr.push_back(a[j]);
+    for (int i = 0; i < newArr.size(); i ++) a[l1 + i] = newArr[i];
+}
+
+void mergeSort(int a[], int l, int r)
+{
+    if (l == r) return;
+    int mid = (l + r) / 2;
+    mergeSort(a, l, mid);
+    mergeSort(a, mid + 1, r);
+    merge(a, l, mid, mid + 1, r);   //có thể thay thế bằng hàm merge() trong thư viện algorithm
+}
+```
+
+#### Độ phức tạp
+
+Theo như việc phân tích độ phức tạp đã đề cập ở trên, độ phức tạp trung bình của MergeSort là $\Theta(n\text{log}n)$. Thực tế thì trong mọi trường hợp, độ phức tạp của MergeSort luôn là $O(n\text{log}n)$.
+
+### Cặp điểm gần nhất
