@@ -25,9 +25,9 @@ Ta nhắc lại một vài ký hiệu trước khi vào phần này:
 
 Chi tiết về các ký hiệu độ phức tạp và thời gian bạn đọc có thể tham khảo bài [Độ phức tạp thời gian](https://vnoi.info/wiki/algo/basic/computational-complexity.md).
 
-### Định lý thợ (Master's theorem)
+### Định lý Thợ (Master's theorem)
 
-Độ phức tạp của các thuật toán chia để trị cài đặt dưới dạng đệ quy được xác định bằng **định lý thợ**.
+Độ phức tạp của các thuật toán chia để trị cài đặt dưới dạng đệ quy được xác định bằng **Định lý Thợ**.
 
 Giả sử có một bài toán $P$ với dữ liệu đầu vào có độ lớn là $n$ (mảng có độ dài $n$ chẳng hạn) được cài đặt bằng đệ quy, tại mỗi vòng đệ quy bài toán được chia thành $a$ bài toán con như sau:
 
@@ -64,7 +64,7 @@ $$
 
 Ví dụ, với thuật toán MergeSort, tại mỗi bước ta chia một đoạn có độ dài $n$ thành hai đoạn con có độ dài $n/2$ hoặc xấp xỉ số đó. Thuật toán sẽ có thời gian chạy là $T(n) = 2T(\frac{n}{2}) + O(n)$ khi $n > 1$ và $O(1)$ khi $n = 1$.
 
-Bây giờ, ta lại xét giá trị $f(n)$. Giả sử $f(n)$ viết được dưới dạng $\Theta(n^p\text{log}^qn)$ (Định lý thợ chỉ xét $f(n)$ là độ phức tạp đa thức). Chúng ta có thể tiếp tục thu gọn biểu thức như sau:
+Bây giờ, ta lại xét giá trị $f(n)$. Giả sử $f(n)$ viết được dưới dạng $\Theta(n^p\text{log}^qn)$ (Định lý Thợ chỉ xét $f(n)$ là độ phức tạp đa thức). Chúng ta có thể tiếp tục thu gọn biểu thức như sau:
 
 -   Nếu $a > b^p$, tức là việc kết hợp kết quả có độ phức tạp không đáng kể so với giải các bài toán con, ta có:
     $$T(n) = \Theta(n^{\text{log}_b a})$$
@@ -72,7 +72,7 @@ Bây giờ, ta lại xét giá trị $f(n)$. Giả sử $f(n)$ viết được d
     -   Nếu $q > -1$, ta có:
         $$T(n) = \Theta(n^{\text{log}_b a}\text{log}^{q + 1}n)$$
     -   Nếu $q = -1$, ta có:
-        $$T(n) = \Theta(n^{\text{log}_b a}\text{log}\text{log}n)$$
+        $$T(n) = \Theta(n^{\text{log}_b a}\text{log}\text{log }n)$$
     -   Nếu $q < -1$, ta có:
         $$T(n) = \Theta(n^{\text{log}_b a})$$
 -   Nếu $a < b^p$, tức là tức là việc kết hợp kết quả có độ phức tạp rất lớn so với giải các bài toán con:
@@ -83,11 +83,11 @@ Bây giờ, ta lại xét giá trị $f(n)$. Giả sử $f(n)$ viết được d
 
 Một số ví dụ:
 
--   Thuật toán Tìm kiếm nhị phân (Binary search) mỗi lần chia bài toán thành 2 phần bằng nhau nhưng chỉ xét 1, không cần kết hợp kết quả sẽ có $T(n) = T(n / 2) + O(1)$. Thời gian chạy trung bình của thuật toán là $T(n) = \Theta(\text{log}n)$, ứng với $a = 1, b = 2, p = 0, q = 0$.
--   Thuật toán MergeSort chia đôi dãy hiện tại thành 2 phần bằng nhau, lấy cả 2 và phải xét lại cả 2 phần để lấy kết quả sẽ có $T(n) = 2T(n / 2) + O(n)$. Thời gian chạy trung bình của thuật toán là $T(n) = \Theta(n\text{log}n)$, ứng với $a = 2, b = 2, p = 1, q = 0$ (Chi tiết về thuật MergeSort bạn đọc có thể đọc phần dưới).
+-   Thuật toán Tìm kiếm nhị phân (Binary search) mỗi lần chia bài toán thành 2 phần bằng nhau nhưng chỉ xét 1, không cần kết hợp kết quả sẽ có $T(n) = T(n / 2) + O(1)$. Thời gian chạy trung bình của thuật toán là $T(n) = \Theta(\text{log }n)$, ứng với $a = 1, b = 2, p = 0, q = 0$.
+-   Thuật toán MergeSort chia đôi dãy hiện tại thành 2 phần bằng nhau, lấy cả 2 và phải xét lại cả 2 phần để lấy kết quả sẽ có $T(n) = 2T(n / 2) + O(n)$. Thời gian chạy trung bình của thuật toán là $T(n) = \Theta(n\text{log }n)$, ứng với $a = 2, b = 2, p = 1, q = 0$ (Chi tiết về thuật MergeSort bạn đọc có thể đọc phần dưới).
 -   Một thuật toán chia để trị có $T(n) = 3T(n / 2) + \text{log}^2n$. Thời gian chạy trung bình của thuật toán là $T(n) = \Theta(n^{\text{log}_2 3})$, tương ứng với $a = 3, b = 2, p = 0, q = 2$.
 
-Định lý thợ là một công cụ hữu hiệu để xác định độ phức tạp của một thuật toán chia để trị. Chỉ cần xác định được số bài toán con, kích thước dữ liệu các bài toán con và độ phức tạp của việc kết hợp dữ liệu, ta dễ dàng tìm ra độ phức tạp chung của bài toán.
+Định lý Thợ là một công cụ hữu hiệu để xác định độ phức tạp của một thuật toán chia để trị. Chỉ cần xác định được số bài toán con, kích thước dữ liệu các bài toán con và độ phức tạp của việc kết hợp dữ liệu, ta dễ dàng tìm ra độ phức tạp chung của bài toán.
 
 ## Một số ví dụ áp dụng Chia để trị
 
@@ -134,8 +134,160 @@ void mergeSort(int a[], int l, int r)
 }
 ```
 
-#### Độ phức tạp
+#### Đánh giá
 
-Theo như việc phân tích độ phức tạp đã đề cập ở trên, độ phức tạp trung bình của MergeSort là $\Theta(n\text{log}n)$. Thực tế thì trong mọi trường hợp, độ phức tạp của MergeSort luôn là $O(n\text{log}n)$.
+Theo như phân tích độ phức tạp đã đề cập ở trên, độ phức tạp trung bình của MergeSort là $\Theta(n\text{log }n)$. Thực tế thì trong mọi trường hợp, độ phức tạp của MergeSort luôn là $O(n\text{log }n)$.
 
 ### Cặp điểm gần nhất
+
+**Đề bài**: Cho $n$ điểm trên mặt phẳng $(2 \leq n \leq 10^5)$. Hãy tìm khoảng cách nhỏ nhất giữa hai điểm bất kỳ trong đó.
+
+_Đề bài VNOI_: [NEAREST](https://vnoi.info/problems/NEAREST/)
+
+#### Phân tích
+
+Giả sử có $n$ điểm $A_1, A_2, ..., A_n$.
+
+Ta có thể sử dụng một thuật toán tầm thường cho bài này: xét tất cả mọi cặp điểm, kiểm tra xem khoảng cách giữa hai cặp điểm nào là gần nhau nhất. Độ phức tạp khi đó sẽ là $O(n^2)$ trong mọi trường hợp, chưa đủ để vượt qua giới hạn của bài toán này.
+
+Ta nghĩ đến việc sử dụng chia để trị, bằng cách sắp xếp các điểm trong tập hợp theo hoành độ $x$. Base case lúc này thay vì là $l = r$ thì sẽ là $r - l \leq 3$, do ta không thể xác định khoảng cách với $1$ điểm, và cũng cần đảm bảo rằng khi chạy đệ quy không tồn tại tập nào có độ lớn như vậy. Ngoài trường hợp đó, ta thu được kết quả của 2 tập trái và phải. Tuy nhiên, việc kết hợp kết quả không đơn giản, vì một điểm ở bên trái $A_mid$ vẫn có thể tạo ra khoảng cách ngắn nhất với một điểm bên phải. Ta cũng không thể chạy hết từng cặp điểm một trong hai tập này, vì khi đó theo Định lý Thợ độ phức tạp trung bình sẽ lên đến $\Theta(n^2)$.
+
+![nearest1]()
+
+Gọi $d$ là giá trị tốt hơn giữa khoảng cách ngắn nhất giữa hai điểm ta vừa thu được ở tập bên phải và tập bên trái. Khi đó, trong cùng một tập hợp, không tồn tại một cặp điểm nào có khoảng cách ngắn hơn $d$. Giữa hai tập hợp lúc này ta sẽ chỉ quan tâm đến các cặp điểm có khoảng cách nhỏ hơn $d$.
+
+Xét các điểm có hoành độ cách $A_mid$ một khoảng không vượt quá $d$. Các điểm này nằm giữa các đường thẳng $x = x_{mid}$ - d và $x = x_{mid} + d$:
+
+![nearest2]()
+
+Đến đây, ta có một nhận xét quan trọng: Với mỗi điểm $A_m$ nằm trong miền trên, tồn tại không quá 6 điểm khác $A_m$ có tung độ $y$ chênh lệch không quá $d$ so với $y_m$.
+
+::spoiler Chứng minh
+::
+
+Nếu ta sắp xếp các điểm trong miền này theo thứ tự $y$ tăng dần, với một điểm bất kỳ ta chỉ cần xét một số điểm lân cận thoả mãn chênh lệch tung độ không vượt quá $d$, rồi tính khoảng cách giữa chúng.
+
+![nearest3]()
+
+Khi cài đặt, sau khi tiến hành tìm khoảng cách ngắn nhất giữa hai điểm ta có thể giữ nguyên trạng thái sau khi sắp xếp theo $y$ của đoạn đó, rồi dùng phép `merge()` như bài MergeSort ở trên để sắp xếp nhanh đoạn lớn, tiết kiệm được $O(\text{log } n)$
+
+#### Cài đặt
+
+```cpp=
+#include <bits/stdc++.h>
+
+using namespace std;
+
+const int MAXN = 1e5 + 5;
+const long long INF = LLONG_MAX;
+
+struct Point
+{
+    double x, y;
+
+    void inp()
+    {
+        cin >> x >> y;
+    }
+
+    bool operator < (Point other)
+    {
+        if (x == other.x) return (y < other.y);
+        return (x < other.x);
+    }
+}a[MAXN], middleArea[MAXN];
+
+bool ascendingY(Point p1, Point p2) {return make_pair(p1.y, p1.x) < make_pair(p2.y, p2.x);}
+
+double dist(Point p1, Point p2)
+{
+    return hypot(1.0 * p1.x - p2.x, 1.0 * p1.y - p2.y);
+}
+
+//Tìm cặp điểm gần nhất trong các điểm thuộc middleAreaa
+double nearestMiddle(int middleAreaSize, double d)
+{
+    double ret = INT_MAX;
+    for (int i = 1; i <= middleAreaSize; i++)
+        for (int j = i + 1; j <= middleAreaSize; j++)
+        {
+            if (middleArea[j].y - middleArea[i].y >= d) break;
+            ret = min(ret, dist(middleArea[i], middleArea[j]));
+        }
+    return ret;
+}
+
+//Tìm cặp điểm gần nhất trong các điểm thuộc mảng a độ dài n
+double nearest(Point a[], int n)
+{
+    if (n <= 3)
+    {
+        sort(a + 1, a + n + 1, ascendingY);
+        double ret = INF;
+        for (int i = 1; i <= n; i++)
+            for (int j = i + 1; j <= n; j++)
+                ret = min(ret, dist(a[i], a[j]));
+        return ret;
+    }
+
+    int mid = n / 2;
+    auto midPoint = a[mid];
+    double dL = nearest(a, mid);
+    double dR = nearest(a + mid, n - mid);
+    double d = min(dL, dR);
+
+    int middleAreaSize = 0;
+    merge(a + 1, a + mid + 1, a + mid + 1, a + n + 1, middleArea + 1, ascendingY);
+    for (int i = 1; i <= n; i ++)
+    {
+        a[i] = middleArea[i];
+        if (abs(middleArea[i].x - midPoint.x) < d) middleArea[++middleAreaSize] = middleArea[i];
+    }
+    return min(d, nearestMiddle(middleAreaSize, d));
+}
+
+int main()
+{
+    int n;
+    cin >> n;
+    for (int i = 1; i <= n; i ++) a[i].inp();
+    sort(a + 1, a + n + 1);
+    cout << fixed << setprecision(3) << nearest(a, n);
+
+    return 0;
+}
+
+```
+
+Mảng `middleArea[]` lưu các điểm nằm ở giữa miền tạo bởi hai đường thằng $x_{mid} - m$ và $x_{mid} + m$.
+Hàm `hypot(a, b)` trả về cạnh huyền của tam giác vuông có hai cạnh góc vuông là $a$ và $b$, tức giá trị $\sqrt{a^2 + b^2}$
+Hàm `merge()` thực hiện ghép hai đoạn đã sắp xếp, tương tự hàm `merge()` ở code MergeSort trên.
+
+#### Đánh giá
+
+Mỗi tập $[l, r]$ được chia thành hai tập con, mỗi tập con có bộ dữ liệu bằng đúng một nửa tập lớn. Việc tìm kết quả của đoạn lớn bao gồm việc ghép đoạn để sắp xếp lại mất $O(n)$ và tính khoảng cách nhỏ nhất giữa các điểm ở giữa hết $O(7n) = O(n)$. Do vậy thuật này có $T(n) = 2T(\frac{n}{2}) + O(n)$ và có độ phức tạp trung bình là $\Theta(n\text{log }n)$ theo Định lý Thợ. Trong mọi trường hợp, thuật toán đều thực hiện những bước tương tự và độ phức tạp là $O(n\text{log }n)$.
+
+#### Bonus
+
+Bài toán này còn một lời giải khác bằng cách sử dụng kỹ thuật đường quét (sweep-line) kết hợp với cấu trúc `set`. Lời giải này có cùng độ phức tạp nhưng ngắn gọn và dễ cài đặt hơn lời giải bằng chia để trị. Bạn đọc tự cài đặt và tìm hiểu thêm, tham khảo [code của skyvn97](https://vnoi.info/problems/show_solution/NEAREST/1389230/).
+
+## Chú ý thêm
+
+Kỹ thuật chia để trị có thể làm tối ưu khá tốt lời giải của một thuật toán. Đặc biệt trong các bài toán quy hoạch động, chia để trị là một trick tối ưu khá hiệu quả. Bạn đọc có thể tham khảo thêm tại [bài viết này](https://vnoi.info/wiki/algo/dp/Mot-so-ky-thuat-toi-uu-hoa-thuat-toan-Quy-Hoach-Dong.md).
+
+## Bài tập áp dụng
+
+-   [Codeforces - Copium permutation](https://codeforces.com/contest/1827/problem/F)
+-   [CERC 17 - I](https://codeforces.com/gym/101620/attachments)
+-   [VNOJ - NORMA](https://oj.vnoi.info/problem/norma)
+-   [VNOJ - LIS2VN](https://oj.vnoi.info/problem/lis2vn)
+-   [UVA - Bit Maps](https://onlinejudge.org/index.php?option=onlinejudge&Itemid=8&page=show_problem&problem=119)
+-   [IOI 2011 - Race](https://oj.uz/problem/view/IOI11_race)
+
+## Tài liệu tham khảo
+
+-   Steven Halim, Felix Halim (2013), _Competitive Programing 3_
+-   Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest and Clifford Stein (2022), _Introduction to Algorithms_, 4th edition
+-   Mark Berg , Otfried Cheong , Marc Kreveld , Mark Overmars (2008), _Computational Geometry - Algorithms and Applications_
+-   Wikipedia (Master's Theorem)
+-   [Bài giảng của Piotr Indyk tại MIT](http://people.csail.mit.edu/indyk/6.838-old/handouts/lec17.pdf)
