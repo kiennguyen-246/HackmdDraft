@@ -53,7 +53,6 @@ Nếu ta coi mỗi bài toán con là một nút trên một cây và mỗi lầ
 
 ![problem tree](https://hackmd.io/_uploads/SJGSaKEk6.png)
 
-
 Tại mỗi nút của cây trên, nếu việc kết hợp kết quả các bài toán con mất $f(n)$ thời gian, thì thời gian chạy tại một nút với kích thước dữ liệu là $n$ có thể được tính theo công thức truy hồi:
 
 $$
@@ -68,21 +67,11 @@ với $k$ là một hằng số nào đó, tuỳ thuộc vào thuật toán.
 Ví dụ, với thuật toán MergeSort, tại mỗi bước ta chia một đoạn có độ dài $n$ thành hai đoạn con có độ dài $n/2$ hoặc xấp xỉ số đó. Thuật toán sẽ có thời gian chạy là $T(n) = 2T(\frac{n}{2}) + O(n)$ khi $n > 1$ và $O(1)$ khi $n = 1$.
 
 Bây giờ, ta lại xét giá trị $f(n)$. Giả sử $f(n)$ viết được dưới dạng $\Theta(n^p\text{log}^qn)$ (Định lý Thợ chỉ áp dụng khi $f(n)$ có độ phức tạp đa thức). Chúng ta có thể tiếp tục thu gọn biểu thức như sau:
-
--   Nếu $a > b^p$, tức là việc kết hợp kết quả có độ phức tạp không đáng kể so với giải các bài toán con, ta có:
-    $$T(n) = \Theta(n^{\text{log}_b a})$$
--   Nếu $a = b^p$, tức là việc kết hợp kết quả có độ phức tạp tương đương giải các bài toán con:
-    -   Nếu $q > -1$, ta có:
-        $$T(n) = \Theta(n^{\text{log}_b a}\text{log}^{q + 1}n)$$
-    -   Nếu $q = -1$, ta có:
-        $$T(n) = \Theta(n^{\text{log}_b a}\text{log}\text{log }n)$$
-    -   Nếu $q < -1$, ta có:
-        $$T(n) = \Theta(n^{\text{log}_b a})$$
--   Nếu $a < b^p$, tức là tức là việc kết hợp kết quả có độ phức tạp đáng kể so với giải các bài toán con:
-    -   Nếu $q \geq 0$, ta có:
-        $$T(n) = \Theta(n^p\text{log}_q n)$$
-    -   Nếu $q < 0$, ta có:
-        $$T(n) = \Theta(n^k)$$
+| Quan hệ $a$ và $b^p$ | Biểu thức $T(n)$ |
+|---|---|
+| $a > b^p$ | $T(n) = \Theta(n^{\text{log}_b a})$ |
+| $a = b^p$ | $T(n) = \Theta(n^{\text{log}_b a}\text{log}^{q + 1}n)$ khi $q > -1$ <br> $T(n) = \Theta(n^{\text{log}_b a}\text{log}\text{log }n)$ khi $q = -1$ <br> $T(n) = \Theta(n^{\text{log}_b a})$ khi $q < -1$ |
+| $a < b^p$ | $T(n) = \Theta(n^p\text{log}_q n)$ khi $q \geq 0$ <br> $T(n) = \Theta(n^k)$ khi $q < 0$ |
 
 Một số ví dụ:
 
@@ -156,7 +145,6 @@ Ta có thể sử dụng một thuật toán tầm thường cho bài này: xét
 Ta nghĩ đến việc sử dụng chia để trị, bằng cách sắp xếp các điểm trong tập hợp theo hoành độ $x$. Base case lúc này thay vì là $l = r$ thì sẽ là $r - l \leq 2$, do ta không thể xác định khoảng cách với $1$ điểm, và cũng cần đảm bảo rằng khi chạy đệ quy không tồn tại tập nào có độ lớn như vậy. Ngoài trường hợp đó, ta thu được kết quả của 2 tập trái và phải. Tuy nhiên, việc kết hợp kết quả không đơn giản, vì một điểm ở bên trái $A_{mid}$ vẫn có thể tạo ra khoảng cách ngắn nhất với một điểm bên phải. Ta cũng không thể chạy hết từng cặp điểm một trong hai tập này, vì khi đó theo Định lý Thợ độ phức tạp trung bình sẽ lên đến $\Theta(n^2)$.
 
 ![nearest1](https://hackmd.io/_uploads/ryCGGq4kT.png)
-
 
 Ở hình vẽ trên, hai màu xanh và đỏ tượng trưng cho hai nửa phải và trái. Điểm $A_4$ đóng vai trò là $A_{mid}$, thuộc tập bên phải.
 
