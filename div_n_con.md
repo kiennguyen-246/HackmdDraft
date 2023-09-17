@@ -160,9 +160,20 @@ Xét các điểm có hoành độ cách $A_mid$ một khoảng không vượt q
 
 ![nearest2]()
 
-Đến đây, ta có một nhận xét quan trọng: Với mỗi điểm $A_m$ nằm trong miền trên, tồn tại không quá 6 điểm khác $A_m$ có tung độ $y$ chênh lệch không quá $d$ so với $y_m$.
+Đến đây, ta có một nhận xét quan trọng: Với mỗi điểm $A_m$ nằm trong miền trên, tồn tại không quá 7 điểm khác $A_m$ có tung độ $y$ lớn hơn không quá $d$ so với $y_m$.
 
 ::spoiler Chứng minh
+Khoảng các điểm thoả mãn điều kiện trên được giới hạn bởi hình vẽ sau:
+
+![window]()
+
+Khoảng trên là hình tạo bởi hai hình vuông có cạnh là $d$ nằm cạnh nhau. Các điểm thoả mãn nằm trong hoặc trên cạnh của hai hình vuông này, và khoảng cách giữa hai điểm bất kỳ trong cùng một hình vuông không nhỏ hơn $d$. Không thể xếp quá $4$ điểm như vậy vào trong một hình vuông. Thật vậy, với mỗi điểm ta vẽ một đường tròn có tâm tại điểm đó và bán kính bằng $d / 2$. Hai đường tròn bất kỳ không thể có nhiều hơn 1 điểm chung, vì nếu không khoảng cách giữa chúng sẽ nhỏ hơn $d$.
+
+![window2]()
+
+Ta thấy mỗi hình tròn có diện tích giao với hình vuông là $\geq \frac{\pi d^2}{4} = \frac{\pi}{16} d^2$, do khi tịnh tiến hình tròn dọc theo cả hai phương $x$ và $y$ ta đều thu được các hình có diện tích lớn hơn. Vì hình vuông có diện tích là $d^2$, số miền diện tích như vậy có thể đặt vào hình tròn là $d^2 : \frac{\pi}{16}d^2 \approx 5.1$. Tuy nhiên, không tồn tại cách đặt 5 điểm vào hình vuông thoả mãn yêu cầu của đề bài, nên số điểm đặt được tối đa là 4.
+
+Với 4 điểm ở mỗi hình vuông, số điểm đặt được tối đa là 8, tính cả điểm mà chúng ta đã xét ban đầu. Do vậy có tối đa 7 điểm thoả mãn tung độ lớn hơn $y_m$ không quá $d$.
 ::
 
 Nếu ta sắp xếp các điểm trong miền này theo thứ tự $y$ tăng dần, với một điểm bất kỳ ta chỉ cần xét một số điểm lân cận thoả mãn chênh lệch tung độ không vượt quá $d$, rồi tính khoảng cách giữa chúng.
@@ -275,7 +286,7 @@ Bài toán này còn một lời giải khác bằng cách sử dụng kỹ thu�
 
 Kỹ thuật chia để trị có thể làm tối ưu khá tốt lời giải của một thuật toán. Đặc biệt trong các bài toán quy hoạch động, chia để trị là một trick tối ưu khá hiệu quả. Bạn đọc có thể tham khảo thêm tại [bài viết này](https://vnoi.info/wiki/algo/dp/Mot-so-ky-thuat-toi-uu-hoa-thuat-toan-Quy-Hoach-Dong.md).
 
-## Bài tập áp dụng
+## Bài tập
 
 -   [Codeforces - Copium permutation](https://codeforces.com/contest/1827/problem/F)
 -   [CERC 17 - I](https://codeforces.com/gym/101620/attachments)
