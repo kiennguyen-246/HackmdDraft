@@ -18,7 +18,7 @@ Tư tưởng chia để trị cũng xuất hiện rất đa dạng và phổ bi�
 
 Ta nhắc lại một vài ký hiệu trước khi vào phần này:
 
--   $\text{log}_a b$: Logarit cơ số $a$ của $b$, là số thực $k$ thoả mãn $a^k = b$. Khi $a = 2$, ta có thể viết là $\text{log } b$ (khác với sách giáo khoa của Việt Nam, trong đó $\text{log }b = \text{log}_{10} b$.
+-   $\text{log}_a b$: Logarit cơ số $a$ của $b$, là số thực $k$ thoả mãn $a^k = b$. Khi $a = 2$, ta có thể viết là $\text{log } b$ (khác với sách giáo khoa của Việt Nam, trong đó $\text{log }b = \text{log}_{10} b$).
 -   $T(n)$: Thời gian chạy thuật toán với kích thước dữ liệu đầu vào là $n$, tính bằng số phép tính.
 -   $O()$: Độ phức tạp worst case của thuật toán. Ký hiệu này cũng dùng phổ biến để chỉ độ phức tạp trung bình.
 -   $\Theta()$: Độ phức tạp trung bình của thuật toán.
@@ -51,7 +51,8 @@ void P(<input kích thước n>)
 
 Nếu ta coi mỗi bài toán con là một nút trên một cây và mỗi lần gọi đệ quy từ một bài toán con ta nối thêm một nút con vào nút biểu diễn bài toán nói trên thì bài toán lớn của chúng ta sẽ có dạng như sau:
 
-![problem tree]()
+![problem tree](https://hackmd.io/_uploads/SJGSaKEk6.png)
+
 
 Tại mỗi nút của cây trên, nếu việc kết hợp kết quả các bài toán con mất $f(n)$ thời gian, thì thời gian chạy tại một nút với kích thước dữ liệu là $n$ có thể được tính theo công thức truy hồi:
 
@@ -62,9 +63,11 @@ T(n) = \begin{cases}
     \end{cases}
 $$
 
+với $k$ là một hằng số nào đó, tuỳ thuộc vào thuật toán.
+
 Ví dụ, với thuật toán MergeSort, tại mỗi bước ta chia một đoạn có độ dài $n$ thành hai đoạn con có độ dài $n/2$ hoặc xấp xỉ số đó. Thuật toán sẽ có thời gian chạy là $T(n) = 2T(\frac{n}{2}) + O(n)$ khi $n > 1$ và $O(1)$ khi $n = 1$.
 
-Bây giờ, ta lại xét giá trị $f(n)$. Giả sử $f(n)$ viết được dưới dạng $\Theta(n^p\text{log}^qn)$ (Định lý Thợ chỉ xét $f(n)$ là độ phức tạp đa thức). Chúng ta có thể tiếp tục thu gọn biểu thức như sau:
+Bây giờ, ta lại xét giá trị $f(n)$. Giả sử $f(n)$ viết được dưới dạng $\Theta(n^p\text{log}^qn)$ (Định lý Thợ chỉ áp dụng khi $f(n)$ có độ phức tạp đa thức). Chúng ta có thể tiếp tục thu gọn biểu thức như sau:
 
 -   Nếu $a > b^p$, tức là việc kết hợp kết quả có độ phức tạp không đáng kể so với giải các bài toán con, ta có:
     $$T(n) = \Theta(n^{\text{log}_b a})$$
@@ -75,7 +78,7 @@ Bây giờ, ta lại xét giá trị $f(n)$. Giả sử $f(n)$ viết được d
         $$T(n) = \Theta(n^{\text{log}_b a}\text{log}\text{log }n)$$
     -   Nếu $q < -1$, ta có:
         $$T(n) = \Theta(n^{\text{log}_b a})$$
--   Nếu $a < b^p$, tức là tức là việc kết hợp kết quả có độ phức tạp rất lớn so với giải các bài toán con:
+-   Nếu $a < b^p$, tức là tức là việc kết hợp kết quả có độ phức tạp đáng kể so với giải các bài toán con:
     -   Nếu $q \geq 0$, ta có:
         $$T(n) = \Theta(n^p\text{log}_q n)$$
     -   Nếu $q < 0$, ta có:
@@ -150,35 +153,40 @@ Giả sử có $n$ điểm $A_1, A_2, ..., A_n$.
 
 Ta có thể sử dụng một thuật toán tầm thường cho bài này: xét tất cả mọi cặp điểm, kiểm tra xem khoảng cách giữa hai cặp điểm nào là gần nhau nhất. Độ phức tạp khi đó sẽ là $O(n^2)$ trong mọi trường hợp, chưa đủ để vượt qua giới hạn của bài toán này.
 
-Ta nghĩ đến việc sử dụng chia để trị, bằng cách sắp xếp các điểm trong tập hợp theo hoành độ $x$. Base case lúc này thay vì là $l = r$ thì sẽ là $r - l \leq 3$, do ta không thể xác định khoảng cách với $1$ điểm, và cũng cần đảm bảo rằng khi chạy đệ quy không tồn tại tập nào có độ lớn như vậy. Ngoài trường hợp đó, ta thu được kết quả của 2 tập trái và phải. Tuy nhiên, việc kết hợp kết quả không đơn giản, vì một điểm ở bên trái $A_mid$ vẫn có thể tạo ra khoảng cách ngắn nhất với một điểm bên phải. Ta cũng không thể chạy hết từng cặp điểm một trong hai tập này, vì khi đó theo Định lý Thợ độ phức tạp trung bình sẽ lên đến $\Theta(n^2)$.
+Ta nghĩ đến việc sử dụng chia để trị, bằng cách sắp xếp các điểm trong tập hợp theo hoành độ $x$. Base case lúc này thay vì là $l = r$ thì sẽ là $r - l \leq 2$, do ta không thể xác định khoảng cách với $1$ điểm, và cũng cần đảm bảo rằng khi chạy đệ quy không tồn tại tập nào có độ lớn như vậy. Ngoài trường hợp đó, ta thu được kết quả của 2 tập trái và phải. Tuy nhiên, việc kết hợp kết quả không đơn giản, vì một điểm ở bên trái $A_{mid}$ vẫn có thể tạo ra khoảng cách ngắn nhất với một điểm bên phải. Ta cũng không thể chạy hết từng cặp điểm một trong hai tập này, vì khi đó theo Định lý Thợ độ phức tạp trung bình sẽ lên đến $\Theta(n^2)$.
 
-![nearest1]()
+![nearest1](https://hackmd.io/_uploads/ryCGGq4kT.png)
+
+
+Ở hình vẽ trên, hai màu xanh và đỏ tượng trưng cho hai nửa phải và trái. Điểm $A_4$ đóng vai trò là $A_{mid}$, thuộc tập bên phải.
 
 Gọi $d$ là giá trị tốt hơn giữa khoảng cách ngắn nhất giữa hai điểm ta vừa thu được ở tập bên phải và tập bên trái. Khi đó, trong cùng một tập hợp, không tồn tại một cặp điểm nào có khoảng cách ngắn hơn $d$. Giữa hai tập hợp lúc này ta sẽ chỉ quan tâm đến các cặp điểm có khoảng cách nhỏ hơn $d$.
 
-Xét các điểm có hoành độ cách $A_mid$ một khoảng không vượt quá $d$. Các điểm này nằm giữa các đường thẳng $x = x_{mid}$ - d và $x = x_{mid} + d$:
+Xét các điểm có hoành độ cách $A_{mid}$ một khoảng không vượt quá $d$. Các điểm này nằm giữa các đường thẳng $x = x_{mid} - d$ và $x = x_{mid} + d$:
 
-![nearest2]()
+![nearest2](https://hackmd.io/_uploads/rysgQc4yT.png)
 
 Đến đây, ta có một nhận xét quan trọng: Với mỗi điểm $A_m$ nằm trong miền trên, tồn tại không quá 7 điểm khác $A_m$ có tung độ $y$ lớn hơn không quá $d$ so với $y_m$.
 
-::spoiler Chứng minh
+:::spoiler _Chứng minh (nhấn để hiện)_
+
 Khoảng các điểm thoả mãn điều kiện trên được giới hạn bởi hình vẽ sau:
 
-![window]()
+![window](https://hackmd.io/_uploads/rkqqL9V1p.png)
 
 Khoảng trên là hình tạo bởi hai hình vuông có cạnh là $d$ nằm cạnh nhau. Các điểm thoả mãn nằm trong hoặc trên cạnh của hai hình vuông này, và khoảng cách giữa hai điểm bất kỳ trong cùng một hình vuông không nhỏ hơn $d$. Không thể xếp quá $4$ điểm như vậy vào trong một hình vuông. Thật vậy, với mỗi điểm ta vẽ một đường tròn có tâm tại điểm đó và bán kính bằng $d / 2$. Hai đường tròn bất kỳ không thể có nhiều hơn 1 điểm chung, vì nếu không khoảng cách giữa chúng sẽ nhỏ hơn $d$.
 
-![window2]()
+![window2](https://hackmd.io/_uploads/BJaKDqE16.png)
 
 Ta thấy mỗi hình tròn có diện tích giao với hình vuông là $\geq \frac{\pi d^2}{4} = \frac{\pi}{16} d^2$, do khi tịnh tiến hình tròn dọc theo cả hai phương $x$ và $y$ ta đều thu được các hình có diện tích lớn hơn. Vì hình vuông có diện tích là $d^2$, số miền diện tích như vậy có thể đặt vào hình tròn là $d^2 : \frac{\pi}{16}d^2 \approx 5.1$. Tuy nhiên, không tồn tại cách đặt 5 điểm vào hình vuông thoả mãn yêu cầu của đề bài, nên số điểm đặt được tối đa là 4.
 
 Với 4 điểm ở mỗi hình vuông, số điểm đặt được tối đa là 8, tính cả điểm mà chúng ta đã xét ban đầu. Do vậy có tối đa 7 điểm thoả mãn tung độ lớn hơn $y_m$ không quá $d$.
-::
+
+:::
 
 Nếu ta sắp xếp các điểm trong miền này theo thứ tự $y$ tăng dần, với một điểm bất kỳ ta chỉ cần xét một số điểm lân cận thoả mãn chênh lệch tung độ không vượt quá $d$, rồi tính khoảng cách giữa chúng.
 
-![nearest3]()
+![nearest3](https://hackmd.io/_uploads/r1deOc4kp.png)
 
 Khi cài đặt, sau khi tiến hành tìm khoảng cách ngắn nhất giữa hai điểm ta có thể giữ nguyên trạng thái sau khi sắp xếp theo $y$ của đoạn đó, rồi dùng phép `merge()` như bài MergeSort ở trên để sắp xếp nhanh đoạn lớn, tiết kiệm được $O(\text{log } n)$
 
