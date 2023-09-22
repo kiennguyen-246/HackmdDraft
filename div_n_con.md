@@ -98,7 +98,7 @@ Các bài toán áp dụng Chia để trị chỉ có chung một phương pháp
 ![Minh hoạ MergeSort](https://i.imgur.com/aqQU9hE.png)
 
 #### Cài đặt
-
+:::spoiler **Nhấn để hiện code**
 ```cpp=
 //Ghép hai đoạn [l1, r1], [l2, r2] thành một đoạn bắt đầu từ l1
 void merge(int a[], int l1, int r1, int l2, int r2)
@@ -127,7 +127,9 @@ void mergeSort(int a[], int l, int r)
     merge(a, l, mid, mid + 1, r);  
 }
 ```
+
 Hàm `merge()` trong đoạn code trên có thể thay thế bằng hàm `merge()` trong thư viện `algorithm`.
+:::
 
 #### Đánh giá
 
@@ -183,6 +185,7 @@ Khi cài đặt, sau khi tiến hành tìm khoảng cách ngắn nhất giữa h
 
 #### Cài đặt
 
+:::spoiler **Nhấn để hiện code**
 ```cpp=
 #include <bits/stdc++.h>
 
@@ -271,6 +274,7 @@ int main()
 
 Mảng `middleArea[]` lưu các điểm nằm ở giữa miền tạo bởi hai đường thẳng $x = x_{mid} - m$ và $x = x_{mid} + m$.
 Hàm `hypot(a, b)` trả về cạnh huyền của tam giác vuông có hai cạnh góc vuông là $a$ và $b$, tức giá trị $\sqrt{a^2 + b^2}$; hàm này có sẵn trong thư viện `cmath`.
+:::
 
 
 #### Đánh giá
@@ -322,12 +326,13 @@ Bằng cách sử dụng cách chia để trị như đã nói ở trên, ta d�
 
 Giả sử độ sâu $lvl$ của một vòng đệ quy là số lần phải gọi đệ quy từ đoạn $[1, n]$, ta thấy hai đoạn có cùng độ sâu không có điểm chung. Do đó ta có thể lưu các giá trị $acc$ đi kèm với độ sâu mà không sợ bị trùng lặp.
 
-![srq1]()
+![srq1](https://hackmd.io/_uploads/H1ZBwmiJp.png)
 
-Quay lại với truy vấn `lq rq`, ta cần phải tìm một độ sâu sao cho $lq$ và $rq$ nằm về hai phía của $mid$ của độ sâu này. Để giải quyết vấn đề này, ta gọi $mask[i]$ là một dãy bit, sao cho bit thứ $j$ của dãy này bằng $0$ nếu vị trí $i$ nằm về bên trái $mid$ (tính cả $mid$) ở độ sâu $j$, và $1$ nếu vị trí này nằm về bên phải của $mid$ (không tính $mid$). Ví dụ với dãy bằng $8$ như trên hình, $mask[3] = (010)_2$, $mask[7] = (011)_2$. Như vậy, độ sâu thoả mãn $lq$ và $rq$ nằm về hai phía của $mid$ ở độ sâu này là vị trí của bit đầu tiên bằng $1$ trong dãy $mask[lq] \oplus mask[rq]$, với $\oplus$ là phép xor.
+
+Quay lại với truy vấn `lq rq`, ta cần phải tìm một độ sâu sao cho $lq$ và $rq$ nằm về hai phía của $mid$ của độ sâu này. Để giải quyết vấn đề này, ta gọi $mask[i]$ là một dãy bit, sao cho bit thứ $j$ của dãy này bằng $0$ nếu vị trí $i$ nằm về bên trái $mid$ (tính cả $mid$) ở độ sâu $j$, và $1$ nếu vị trí này nằm về bên phải của $mid$ (không tính $mid$). Ví dụ với dãy bằng $8$ như trên hình, $mask[3] = (010)_2$, $mask[7] = (011)_2$. Như vậy, độ sâu thoả mãn $lq$ và $rq$ nằm về hai phía của $mid$ ở độ sâu này là vị trí của bit đầu tiên bằng $1$ từ phải qua trái trong dãy $mask[lq] \oplus mask[rq]$, với $\oplus$ là phép xor.
 
 #### Cài đặt
-
+:::spoiler **Nhấn để hiện code**
 ```cpp=
 const int MAXN = 1e6;
 
@@ -398,6 +403,7 @@ void solve()
 ```
 
 Hàm `__builtin_ctz(x)` trả về số bit $0$ ở cuối dãy nhị phân có giá trị bằng $x$. Giá trị này chính là vị trí của bit $1$ đầu tiên từ phải qua trái của dãy.
+:::
 
 ## Chú ý thêm
 
@@ -405,12 +411,9 @@ Hàm `__builtin_ctz(x)` trả về số bit $0$ ở cuối dãy nhị phân có 
 -   Đối với các bài toán SRQ, còn một phương pháp hiệu quả vượt trội các phương pháp đã nói trên về độ phức tạp thời gian, đó là cấu trúc Sqrt Tree. Bạn đọc có thể tìm hiểu thêm về cấu trúc này tại [đây](https://cp-algorithms.com/data_structures/sqrt-tree.html).
 
 ## Bài tập
-<<<<<<< HEAD
 
 Các bài chia căn nói chung:
 
-=======
->>>>>>> bf96581eb20d4942ae914ce890fd47814d23b4f6
 -   [CERC 17 - I](https://codeforces.com/gym/101620/attachments)
 -   [VNOJ - NORMA](https://oj.vnoi.info/problem/norma)
 -   [VNOJ - LIS2VN](https://oj.vnoi.info/problem/lis2vn)
