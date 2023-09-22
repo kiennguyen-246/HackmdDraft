@@ -25,7 +25,9 @@ Ta nhắc lại một vài ký hiệu trước khi vào phần này:
 
 Chi tiết về các ký hiệu độ phức tạp và thời gian bạn đọc có thể tham khảo bài [Độ phức tạp thời gian](https://vnoi.info/wiki/algo/basic/computational-complexity.md).
 
-### Định lý Thợ (Master's theorem)
+### Định lý Thợ (Master theorem)
+
+Thuật toán này được nhắc đến trong sách _Introduction to Algorithms_ (xem phần Tài liệu tham khảo). Chưa rõ tên tiếng Việt của thuật toán có nguồn gốc từ đâu.
 
 Độ phức tạp của các thuật toán chia để trị cài đặt dưới dạng đệ quy được xác định bằng **Định lý Thợ**.
 
@@ -70,8 +72,8 @@ Bây giờ, ta lại xét giá trị $f(n)$. Giả sử $f(n)$ viết được d
 | Quan hệ $a$ và $b^p$ | Biểu thức $T(n)$ |
 |---|---|
 | $a > b^p$ | $T(n) = \Theta(n^{\text{log}_b a})$ |
-| $a = b^p$ | $T(n) = \Theta(n^{\text{log}_b a}\text{log}^{q + 1}n)$ khi $q > -1$ <br> $T(n) = \Theta(n^{\text{log}_b a}\text{log}\text{log }n)$ khi $q = -1$ <br> $T(n) = \Theta(n^{\text{log}_b a})$ khi $q < -1$ |
-| $a < b^p$ | $T(n) = \Theta(n^p\text{log}_q n)$ khi $q \geq 0$ <br> $T(n) = \Theta(n^k)$ khi $q < 0$ |
+| $a = b^p$ | $T(n) = \Theta(n^{\text{log}_b a}\text{log}^{q + 1}n)$ khi $q > -1$ <br> $T(n) = \Theta(n^{\text{log}_b a}\text{log }\text{log }n)$ khi $q = -1$ <br> $T(n) = \Theta(n^{\text{log}_b a})$ khi $q < -1$ |
+| $a < b^p$ | $T(n) = \Theta(n^p\text{log}_q n)$ khi $q \geq 0$ <br> $T(n) = \Theta(n^p)$ khi $q < 0$ |
 
 Một số ví dụ:
 
@@ -122,9 +124,10 @@ void mergeSort(int a[], int l, int r)
     int mid = (l + r) / 2;
     mergeSort(a, l, mid);
     mergeSort(a, mid + 1, r);
-    merge(a, l, mid, mid + 1, r);   //có thể thay thế bằng hàm merge() trong thư viện algorithm
+    merge(a, l, mid, mid + 1, r);  
 }
 ```
+Hàm `merge()` trong đoạn code trên có thể thay thế bằng hàm `merge()` trong thư viện `algorithm`.
 
 #### Đánh giá
 
@@ -266,9 +269,9 @@ int main()
 
 ```
 
-Mảng `middleArea[]` lưu các điểm nằm ở giữa miền tạo bởi hai đường thằng $x_{mid} - m$ và $x_{mid} + m$.
-Hàm `hypot(a, b)` trả về cạnh huyền của tam giác vuông có hai cạnh góc vuông là $a$ và $b$, tức giá trị $\sqrt{a^2 + b^2}$
-Hàm `merge()` thực hiện ghép hai đoạn đã sắp xếp, tương tự hàm `merge()` ở code MergeSort trên.
+Mảng `middleArea[]` lưu các điểm nằm ở giữa miền tạo bởi hai đường thẳng $x = x_{mid} - m$ và $x = x_{mid} + m$.
+Hàm `hypot(a, b)` trả về cạnh huyền của tam giác vuông có hai cạnh góc vuông là $a$ và $b$, tức giá trị $\sqrt{a^2 + b^2}$; hàm này có sẵn trong thư viện `cmath`.
+
 
 #### Đánh giá
 
@@ -402,9 +405,12 @@ Hàm `__builtin_ctz(x)` trả về số bit $0$ ở cuối dãy nhị phân có 
 -   Đối với các bài toán SRQ, còn một phương pháp hiệu quả vượt trội các phương pháp đã nói trên về độ phức tạp thời gian, đó là cấu trúc Sqrt Tree. Bạn đọc có thể tìm hiểu thêm về cấu trúc này tại [đây](https://cp-algorithms.com/data_structures/sqrt-tree.html).
 
 ## Bài tập
+<<<<<<< HEAD
 
 Các bài chia căn nói chung:
 
+=======
+>>>>>>> bf96581eb20d4942ae914ce890fd47814d23b4f6
 -   [CERC 17 - I](https://codeforces.com/gym/101620/attachments)
 -   [VNOJ - NORMA](https://oj.vnoi.info/problem/norma)
 -   [VNOJ - LIS2VN](https://oj.vnoi.info/problem/lis2vn)
