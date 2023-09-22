@@ -278,18 +278,147 @@ Mỗi tập $[l, r]$ được chia thành hai tập con, mỗi tập con có b�
 
 Bài toán này còn một lời giải khác bằng cách sử dụng kỹ thuật đường quét (sweep-line) kết hợp với cấu trúc `set`. Lời giải này có cùng độ phức tạp nhưng ngắn gọn và dễ cài đặt hơn lời giải bằng chia để trị. Bạn đọc tự cài đặt và tìm hiểu thêm, tham khảo [code của skyvn97](https://vnoi.info/problems/show_solution/NEAREST/1389230/).
 
+## Bài toán Truy vấn trên mảng cố định
+
+### Bài toán
+
+Bài toán **Truy vấn trên mảng cố định (SRQ - Static Array Queries)** được mô tả như sau:
+
+Xét phép toán bất kỳ có tính chất kết hợp $\star$. Cụ thể hơn, phép toán này áp dụng được trên các giá trị (không nhất thiết là số) $a, b, c$ sao cho $(a \star b) \star c = a \star (b \star c)$. Phép toán này có thể là phép cộng, phép nhân, phép lấy $\text{min}$.
+
+Xét mảng $a$ gồm các số $a_1, a_2, ..., a_n$. Ta phải trả lời $q$ truy vấn, mỗi truy vấn yêu cầu ta tính $a_l \star a_{l + 1} \star ... \star a_r$, với $l, r$ là các giá trị cho trước, $l, r \in [1, n]$.
+
+### Thuật toán giải
+
+Có rất nhiều cách giải bài toán này với độ phức tạp không gian và thời gian logarit tuyến tính ($O(n\text{log }n)$), như cây phân đoạn, BIT, mảng thưa, ... Chia để trị cũng là một cách hiệu quả để giải quyết bài toán, đặc biệt trong trường hợp độ phức tạp cho mỗi truy vấn cần rất thấp.
+
+Giả sử tất cả các truy vấn $(lq, rq)$ đều thoả mãn điều kiện $l \leq lq \leq rq \leq r$. Ban đầu, ta có $l = 1, r = n$. Đặt $mid = \lfloor \frac{l + r}{2} \rfloor$. Gọi $leftAcc[i]$ là "tổng" hậu tố tính từ $mid$ tới $i$ hay:
+$$leftAcc[i] = a[i] \star a[i + 1] \star ... \star a[mid]$$
+
+Tương tự, ta gọi $rightAcc[i]$ là "tổng" tiền tố tính từ $mid + 1$ tới $i$:
+$$rightAcc[i] = a[mid + 1] \star a[mid + 2] \star ... \star a[i]$$
+
+Với các truy vấn thoả mãn $lq \leq mid \leq rq$, kết quả của truy vấn đó sẽ là $leftAcc[i] \star rightAcc[i]$. Điều này là hiển nhiên theo tính chất kết hợp. Với các truy vấn còn lại, hiển nhiên chúng chỉ nằm hoàn toàn ở một trong hai bên của $mid$. Ta thay đổi các giá trị $l, r$ và tính các giá trị $leftAcc, rightAcc$ theo $l, r$ mới. Cứ như vậy tới khi $l = r$.
+
+Về độ phức tạp, ở mỗi bước ta chia mảng độ dài $n$ thành 2 phần đều nhau có kích thước dữ liệu là $\frac{n}{2}$. Sau khi có hai đoạn này, ta mất $O(n)$ để tính $leftAcc, rightAcc$, và $O(1)$ cho mỗi truy vấn, tổng cộng là $O(n + q)$. Độ phức tạp thời gian của thuật toán là $O((n + q)\text{log }n)$, chạy ổn định, còn về không gian chỉ cần $O(n + q)$.
+
+Hai mảng $leftAcc$ và $rightAcc$ không có chung nhau một vị trí nào, vậy nên ta có thể kết hợp lại thành một mảng $acc$. Khi đó với một đoạn $[l, r]$ có phần tử ở giữa là $mid$, các giá trị từ $acc[l]$ đến $acc[mid]$ tương đương với $leftAcc$, và các giá trị $acc[mid + 1]$ đến $acc[r]$ tương đương với $rightAcc$.
+
+Nếu phải sử dụng các truy vấn online, ta lưu lại $acc$ của mỗi lần đệ quy dưới dạng một mảng hai chiều giống như mảng thưa, ví dụ $acc[j][i]$ là kết quả $acc[i]$ ở vòng đệ quy với độ sâu $j$ (xem ví dụ để hiểu rõ hơn). Bằng cách này, ta vẫn có thể trả lời mọi truy vấn trong $O(1)$, và độ phức tạp trở thành $O(n\text{log }n + q)$ cho thời gian và $O(n\text{log }n + q)$ cho không gian.
+
+### Ví dụ
+
+**Đề bài**: [SEGPROD](https://www.codechef.com/problems/SEGPROD)
+_Tóm tắt_: Cho dãy $A$ gồm $N$ số nguyên dương và một số nguyên dương $P$. Có $Q$ truy vấn, truy vấn thứ $i$ yêu cầu tìm tích của các số $A_j$ với $L_i \leq j \leq R_i$, lấy số dư khi chia cho $P$. Chú ý rằng các truy vấn phải được xử lý online và số $P$ có thể không là số nguyên tố.
+
+#### Phân tích
+
+Đây là một bài toán SRQ khá "thẳng", chỉ yêu cầu ta tính tích trên một đoạn bất kỳ. Ý tưởng "ngây thơ" nhất là duyệt qua mọi đoạn con được truy vấn để tìm tích của nó, mất $O(n^2)$. Ta cũng nghĩ đến việc áp dụng tích tiền tố đơn giản, tuy nhiên việc lấy ra một đoạn sẽ gặp khó khăn nếu $P$ không phải là số nguyên tố. Các ý tưởng khác cho bài toán SRQ gồm có cây phân đoạn, BIT thì lại tương đối cồng kềnh về mặt bộ nhớ, còn mảng thưa thì mất $O(\text{log n})$ cho mỗi truy vấn, không thể qua được giới hạn của bài toán này. May mắn thay, sử dụng chia để trị vừa khít với bộ dữ liệu của bài toán.
+
+Bằng cách sử dụng cách chia để trị như đã nói ở trên, ta dễ dàng khởi tạo mảng $acc$ trong $O(n\text{log }n)$. Khi trả lời một truy vấn `lq rq`, như đã nói ở trường hợp truy vấn offline, $lq$ và $rq$ phải thoả mãn $l \leq lq \leq mid$ và $mid + 1 \leq rq \leq r$ tại một vòng đệ quy.
+
+Giả sử độ sâu $lvl$ của một vòng đệ quy là số lần phải gọi đệ quy từ đoạn $[1, n]$, ta thấy hai đoạn có cùng độ sâu không có điểm chung. Do đó ta có thể lưu các giá trị $acc$ đi kèm với độ sâu mà không sợ bị trùng lặp.
+
+![srq1]()
+
+Quay lại với truy vấn `lq rq`, ta cần phải tìm một độ sâu sao cho $lq$ và $rq$ nằm về hai phía của $mid$ của độ sâu này. Để giải quyết vấn đề này, ta gọi $mask[i]$ là một dãy bit, sao cho bit thứ $j$ của dãy này bằng $0$ nếu vị trí $i$ nằm về bên trái $mid$ (tính cả $mid$) ở độ sâu $j$, và $1$ nếu vị trí này nằm về bên phải của $mid$ (không tính $mid$). Ví dụ với dãy bằng $8$ như trên hình, $mask[3] = (010)_2$, $mask[7] = (011)_2$. Như vậy, độ sâu thoả mãn $lq$ và $rq$ nằm về hai phía của $mid$ ở độ sâu này là vị trí của bit đầu tiên bằng $1$ trong dãy $mask[lq] \oplus mask[rq]$, với $\oplus$ là phép xor.
+
+#### Cài đặt
+
+```cpp=
+const int MAXN = 1e6;
+
+int n, a[MAXN], b[MAXN], mod, acc[21][MAXN], mask[MAXN];
+
+/// Khởi tạo acc
+void calc(int l, int r, int level)
+{
+    if (l == r) return;
+    int mid = (l + r) / 2;
+    calc(l, mid, level + 1);
+    calc(mid + 1, r, level + 1);
+
+    acc[level][mid] = a[mid];
+    for (int i = mid - 1; i >= l; i --)
+        acc[level][i] = 1ll * acc[level][i + 1] * a[i] % mod;
+    acc[level][mid + 1] = a[mid + 1];
+    for (int i = mid + 2; i <= r; i ++)
+        acc[level][i] = 1ll * acc[level][i - 1] * a[i] % mod;
+
+    for (int i = mid + 1; i <= r; i ++) mask[i] |= (1 << level);
+}
+
+/// Giải quyết 1 truy vấn
+void solve()
+{
+    int q;
+    cin >> n >> mod >> q;
+    for (int i = 0; i < n; i++) cin >> a[i];
+
+    for (int i = 0; i < n; i++)
+        for (int l = 0; (1 << l) < n; l++)
+            acc[l][i] = 1;
+    for (int i = 0; i < n; i ++) mask[i] = 0;
+    calc(0, n - 1, 0);
+
+    int res = 0;
+    for (int i = 0; i < q / 64 + 2; i++)
+    {
+        cin >> b[i];
+    }
+    for (int i = 0, lq = 0, rq = 0; i < q; i++)
+    {
+        // Nhận truy vấn tiếp theo theo cách đề bài mô tả
+        if (i % 64 == 0)
+        {
+            lq = (b[i / 64] + res) % n;
+            rq = (b[i / 64 + 1] + res) % n;
+        }
+        else
+        {
+            lq = (lq + res) % n;
+            rq = (rq + res) % n;
+        }
+        if (lq > rq) swap(lq, rq);
+
+        // Tìm kết quả cho đoạn [lq, rq] vừa tìm được
+        if (lq == rq) res = a[lq];
+        else
+        {
+            int lvl = __builtin_ctz(mask[lq] ^ mask[rq]);
+            res = 1ll * acc[lvl][lq] * acc[lvl][rq] % mod;
+        }
+        (res += 1) %= mod;
+    }
+    cout << res << "\n";
+}
+```
+
+Hàm `__builtin_ctz(x)` trả về số bit $0$ ở cuối dãy nhị phân có giá trị bằng $x$. Giá trị này chính là vị trí của bit $1$ đầu tiên từ phải qua trái của dãy.
+
 ## Chú ý thêm
 
-Kỹ thuật chia để trị có thể làm tối ưu khá tốt lời giải của một thuật toán. Đặc biệt trong các bài toán quy hoạch động, chia để trị là một trick tối ưu khá hiệu quả. Bạn đọc có thể tham khảo thêm tại [bài viết này](https://vnoi.info/wiki/algo/dp/Mot-so-ky-thuat-toi-uu-hoa-thuat-toan-Quy-Hoach-Dong.md).
+-   Kỹ thuật chia để trị có thể làm tối ưu khá tốt lời giải của một thuật toán. Đặc biệt trong các bài toán quy hoạch động, chia để trị là một trick tối ưu khá hiệu quả. Bạn đọc có thể tham khảo thêm tại [bài viết này](https://vnoi.info/wiki/algo/dp/Mot-so-ky-thuat-toi-uu-hoa-thuat-toan-Quy-Hoach-Dong.md).
+-   Đối với các bài toán SRQ, còn một phương pháp hiệu quả vượt trội các phương pháp đã nói trên về độ phức tạp thời gian, đó là cấu trúc Sqrt Tree. Bạn đọc có thể tìm hiểu thêm về cấu trúc này tại [đây](https://cp-algorithms.com/data_structures/sqrt-tree.html).
 
 ## Bài tập
 
--   [Codeforces - Copium permutation](https://codeforces.com/contest/1827/problem/F)
+Các bài chia căn nói chung:
+
 -   [CERC 17 - I](https://codeforces.com/gym/101620/attachments)
 -   [VNOJ - NORMA](https://oj.vnoi.info/problem/norma)
 -   [VNOJ - LIS2VN](https://oj.vnoi.info/problem/lis2vn)
 -   [UVA - Bit Maps](https://onlinejudge.org/index.php?option=onlinejudge&Itemid=8&page=show_problem&problem=119)
 -   [IOI 2011 - Race](https://oj.uz/problem/view/IOI11_race)
+
+Các bài toán SRQ: 
+
+-   [VNOJ - XORSHIFT](https://oj.vnoi.info/problem/mofkcup_r1_e)
+-   [Duyên hải Bắc Bộ 2023 - HKDATA](https://lqdoj.edu.vn/problem/dhbb23hkdata) (Bạn cần tham gia [contest](https://lqdoj.edu.vn/contest/dhbb23) để xem được đề bài)
+-   [DMOJ - Continued Fractions](https://dmoj.ca/problem/dmopc19c7p4)
+-   [USACO - Non-Decreasing Subsequences](http://www.usaco.org/index.php?page=viewproblem2&cpid=997)
+-   [Codeforces - Destiny](https://codeforces.com/problemset/problem/840/D)
+-   [Codeforces - Timofey and our friends animals](https://codeforces.com/problemset/problem/763/E)
 
 ## Tài liệu tham khảo
 
@@ -297,4 +426,7 @@ Kỹ thuật chia để trị có thể làm tối ưu khá tốt lời giải c
 -   Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest and Clifford Stein (2022), _Introduction to Algorithms_, 4th edition
 -   Mark Berg , Otfried Cheong , Marc Kreveld , Mark Overmars (2008), _Computational Geometry - Algorithms and Applications_
 -   Wikipedia (Master's Theorem)
--   [Bài giảng của Piotr Indyk tại MIT](http://people.csail.mit.edu/indyk/6.838-old/handouts/lec17.pdf)
+-   [Bài giảng của Piotr Indyk tại MIT](http://people.csail.mit.edu/indyk/6.838-old/handouts/lec17.pdf) (bài NEAREST)
+-   USACO Guide Platinium, [Divide and Conquer - SRQ](https://usaco.guide/plat/DC-SRQ?lang=cpp)
+-   Codeforces, [Post của Wind_Eagle](https://codeforces.com/blog/entry/104443)
+-   Codeforces, [Post của steveonalex](https://codeforces.com/blog/entry/119104)
