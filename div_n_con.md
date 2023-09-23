@@ -20,8 +20,8 @@ Ta nhắc lại một vài ký hiệu trước khi vào phần này:
 
 -   $\text{log}_a b$: Logarit cơ số $a$ của $b$, là số thực $k$ thoả mãn $a^k = b$. Khi $a = 2$, ta có thể viết là $\text{log } b$ (khác với sách giáo khoa của Việt Nam, trong đó $\text{log }b = \text{log}_{10} b$).
 -   $T(n)$: Thời gian chạy thuật toán với kích thước dữ liệu đầu vào là $n$, tính bằng số phép tính.
--   $O()$: Độ phức tạp worst case của thuật toán. Ký hiệu này cũng dùng phổ biến để chỉ độ phức tạp trung bình.
--   $\Theta()$: Độ phức tạp trung bình của thuật toán.
+-   $O()$ (big Oh): Độ phức tạp worst case của thuật toán. Ký hiệu này cũng dùng phổ biến để chỉ độ phức tạp trung bình.
+-   $\Theta()$ (big Theta): Hàm tiệm cận thời gian chạy trung bình của thuật toán, thường là độ phức tạp trung bình.
 
 Chi tiết về các ký hiệu độ phức tạp và thời gian bạn đọc có thể tham khảo bài [Độ phức tạp thời gian](https://vnoi.info/wiki/algo/basic/computational-complexity.md).
 
@@ -98,7 +98,9 @@ Các bài toán áp dụng Chia để trị chỉ có chung một phương pháp
 ![Minh hoạ MergeSort](https://i.imgur.com/aqQU9hE.png)
 
 #### Cài đặt
+
 :::spoiler **Nhấn để hiện code**
+
 ```cpp=
 //Ghép hai đoạn [l1, r1], [l2, r2] thành một đoạn bắt đầu từ l1
 void merge(int a[], int l1, int r1, int l2, int r2)
@@ -124,7 +126,7 @@ void mergeSort(int a[], int l, int r)
     int mid = (l + r) / 2;
     mergeSort(a, l, mid);
     mergeSort(a, mid + 1, r);
-    merge(a, l, mid, mid + 1, r);  
+    merge(a, l, mid, mid + 1, r);
 }
 ```
 
@@ -186,6 +188,7 @@ Khi cài đặt, sau khi tiến hành tìm khoảng cách ngắn nhất giữa h
 #### Cài đặt
 
 :::spoiler **Nhấn để hiện code**
+
 ```cpp=
 #include <bits/stdc++.h>
 
@@ -276,7 +279,6 @@ Mảng `middleArea[]` lưu các điểm nằm ở giữa miền tạo bởi hai 
 Hàm `hypot(a, b)` trả về cạnh huyền của tam giác vuông có hai cạnh góc vuông là $a$ và $b$, tức giá trị $\sqrt{a^2 + b^2}$; hàm này có sẵn trong thư viện `cmath`.
 :::
 
-
 #### Đánh giá
 
 Mỗi tập $[l, r]$ được chia thành hai tập con, mỗi tập con có bộ dữ liệu bằng đúng một nửa tập lớn. Việc tìm kết quả của đoạn lớn bao gồm việc ghép đoạn để sắp xếp lại mất $O(n)$ và tính khoảng cách nhỏ nhất giữa các điểm ở giữa hết $O(7n) = O(n)$. Do vậy thuật này có $T(n) = 2T(\frac{n}{2}) + O(n)$ và có độ phức tạp trung bình là $\Theta(n\text{log }n)$ theo Định lý Thợ. Trong mọi trường hợp, thuật toán đều thực hiện những bước tương tự và độ phức tạp là $O(n\text{log }n)$.
@@ -291,9 +293,9 @@ Bài toán này còn một lời giải khác bằng cách sử dụng kỹ thu�
 
 Bài toán **Truy vấn trên mảng cố định (SRQ - Static Array Queries)** được mô tả như sau:
 
-Xét phép toán bất kỳ có tính chất kết hợp $\star$. Cụ thể hơn, phép toán này áp dụng được trên các giá trị (không nhất thiết là số) $a, b, c$ sao cho $(a \star b) \star c = a \star (b \star c)$. Phép toán này có thể là phép cộng, phép nhân, phép lấy $\text{min}$.
+Xét phép toán bất kỳ $\star$ và mảng $a$ gồm các số $a_1, a_2, ..., a_n$. Ta phải trả lời $q$ truy vấn, mỗi truy vấn yêu cầu ta tính $a_l \star a_{l + 1} \star ... \star a_r$, với $l, r$ là các giá trị cho trước, $l, r \in [1, n]$.
 
-Xét mảng $a$ gồm các số $a_1, a_2, ..., a_n$. Ta phải trả lời $q$ truy vấn, mỗi truy vấn yêu cầu ta tính $a_l \star a_{l + 1} \star ... \star a_r$, với $l, r$ là các giá trị cho trước, $l, r \in [1, n]$.
+Trong trường hợp $\star$ là phép toán có tính chất kết hợp, cụ thể hơn, phép toán này áp dụng được trên các giá trị (không nhất thiết là số) $a, b, c$ sao cho $(a \star b) \star c = a \star (b \star c)$, ta có thể sử dụng chia để trị để giải. Một số ví dụ cho phép toán này là phép cộng, phép nhân, phép lấy $\text{min}$.
 
 ### Thuật toán giải
 
@@ -328,11 +330,12 @@ Giả sử độ sâu $lvl$ của một vòng đệ quy là số lần phải g�
 
 ![srq1](https://hackmd.io/_uploads/H1ZBwmiJp.png)
 
-
 Quay lại với truy vấn `lq rq`, ta cần phải tìm một độ sâu sao cho $lq$ và $rq$ nằm về hai phía của $mid$ của độ sâu này. Để giải quyết vấn đề này, ta gọi $mask[i]$ là một dãy bit, sao cho bit thứ $j$ của dãy này bằng $0$ nếu vị trí $i$ nằm về bên trái $mid$ (tính cả $mid$) ở độ sâu $j$, và $1$ nếu vị trí này nằm về bên phải của $mid$ (không tính $mid$). Ví dụ với dãy bằng $8$ như trên hình, $mask[3] = (010)_2$, $mask[7] = (011)_2$. Như vậy, độ sâu thoả mãn $lq$ và $rq$ nằm về hai phía của $mid$ ở độ sâu này là vị trí của bit đầu tiên bằng $1$ từ phải qua trái trong dãy $mask[lq] \oplus mask[rq]$, với $\oplus$ là phép xor.
 
 #### Cài đặt
+
 :::spoiler **Nhấn để hiện code**
+
 ```cpp=
 const int MAXN = 1e6;
 
@@ -420,7 +423,7 @@ Các bài chia căn nói chung:
 -   [UVA - Bit Maps](https://onlinejudge.org/index.php?option=onlinejudge&Itemid=8&page=show_problem&problem=119)
 -   [IOI 2011 - Race](https://oj.uz/problem/view/IOI11_race)
 
-Các bài toán SRQ: 
+Các bài toán SRQ:
 
 -   [VNOJ - XORSHIFT](https://oj.vnoi.info/problem/mofkcup_r1_e)
 -   [Duyên hải Bắc Bộ 2023 - HKDATA](https://lqdoj.edu.vn/problem/dhbb23hkdata) (Bạn cần tham gia [contest](https://lqdoj.edu.vn/contest/dhbb23) để xem được đề bài)
