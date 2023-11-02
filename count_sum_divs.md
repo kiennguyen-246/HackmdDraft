@@ -45,12 +45,12 @@ $$N = \prod_{i = 1}^{k}{p_i^{m_i}} = p_1^{m_1} \times p_2^{m_2} ... \times p_k^{
 với $p_i$ là các số nguyên tố, $m_i$ là các số nguyên dương thì số ước của $N$ là:
 $$\delta(N) = \prod_{i = 1}^{k}{(m_i + 1)}$$
 
-::spoiler **Chứng minh (nhấn để hiện)**
+:::spoiler **Chứng minh (nhấn để hiện)**
 Mỗi ước $d$ của $N$ khi phân tích thành thừa số nguyên tố sẽ có dạng:
 $$d = \prod_{i = 1}^{k}{p_i^{\mu_i}}$$
 vói $0 \leq \mu_i \leq m_i$.
 Mỗi cách chọn số $d$ ứng với một cách chọn bộ số $\mu_i$ nên số cách chọn thoả mãn là $\prod_{i = 1}^{k}{(m_i + 1)}$.
-::
+:::
 
 Để giải bài toán này theo cách phân tích ra thừa số nguyên tố, đầu tiên ta sử dụng sàng nguyên tố để lưu lại các số nguyên tố nhỏ hơn $N$. Sau đó, lần lượt chia $N$ cho các số trên rồi thu lại số lần chia ứng với mỗi số; đó chính là số mũ của các thừa số nguyên tố tương ứng. Cuối cùng, áp dụng công thức trên để tính ra kết quả. Cách làm này mất $O(N)$ thời gian và không gian để chuẩn bị sàng, và $O(\pi(N)) \approx O(\frac{N}{\text{ln }N})$ thời gian để phân tích, với $\pi(n)$ là số lượng số nguyên tố nhỏ hơn $N$. Tổng độ phức tạp là $O(N)$.
 
@@ -207,6 +207,12 @@ int countDiv(long long n) {
     for (auto i : powV) ret *= (i + 1);
     return ret;
 }
+
+void solution() {
+    sieve();
+    long long n;
+    cin >> n;
+    cout << countDiv(n);
 ```
 
 Phần Rabin-Miller có độ phức tạp là $O(12\text{log }N)$. Phần kiểm tra số chính phương có độ phức tạp là $O(\text{log }N)$ (Ta không sử dụng hàm `sqrt()` do kiểu `double` không chính xác với số lớn). Tổng hợp lại, độ phức tạp của giải thuật trên là $O(\sqrt[3]{N})$.
